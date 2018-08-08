@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import axios from 'axios';
 // Components
 import AddQuestion from './add-question'
 //Style
@@ -21,30 +22,28 @@ class NewQuiz extends Component {
     event.preventDefault()
     console.log('handleSubmit')
 
-    // axios
-    //   .post('/user/login', {
-    //     username: this.state.username,
-    //     password: this.state.password
-    //   })
-    //   .then(response => {
-    //     console.log('login response: ')
-    //     console.log(response)
-    //     if (response.status === 200) {
-    //       // update App.js state
-    //       this.props.updateUser({
-    //         loggedIn: true,
-    //         username: response.data.username
-    //       })
-    //       // update the state to redirect to home
-    //       this.setState({
-    //         redirectTo: '/'
-    //       })
-    //     }
-    //   }).catch(error => {
-    //     console.log('login error: ')
-    //     console.log(error);
+    axios.post('/', {
+        quizName: this.state.quizName,
+      })
+      .then(response => {
+        console.log('new quiz response: ')
+        console.log(response)
+        if (response.status === 200) {
+          // update App.js state
+          // this.props.updateQuiz({
+          //   loggedIn: true,
+          //   username: response.data.username
+          // })
+          // update the state to redirect to home
+          this.setState({
+            redirectTo: '/'
+          })
+        }
+      }).catch(error => {
+        console.log('new quiz error: ')
+        console.log(error);
 
-    //   })
+    })
   }
 
   render() {
