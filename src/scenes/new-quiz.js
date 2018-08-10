@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios';
 // Components
-import AddQuestion from './add-question'
 //Style
 import './new-quiz.css'
 
@@ -56,7 +55,7 @@ class NewQuiz extends Component {
               <label className="form-label" htmlFor="quizName">Quiz name</label>
             </div>
             <div className="column input">
-              <input className="form-input"
+              <input className="form-input quiz-name"
                 type="text"
                 id="quizName"
                 name="quizName"
