@@ -10,21 +10,30 @@
     "react": "^16.4.2",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.4.2",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "redux": "^4.0.0",
+    "redux-saga": "^0.16.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "api": "nodemon ./server/server.js",
+    "dev": "concurrently \"react-scripts start\" \"nodemon server/server.js\""
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "concurrently": "^3.6.1",
     "enzyme": "^3.4.1",
     "enzyme-adapter-react-16": "^1.2.0",
     "mocha": "^5.2.0",
-    "react-test-renderer": "^16.4.2"
+    "nodemon": "^1.18.3",
+    "react-test-renderer": "^16.4.2",
+    "redux-logger": "^3.0.6",
+    "sinon": "^6.1.5"
   },
   "proxy": "http://localhost:8070"
 }

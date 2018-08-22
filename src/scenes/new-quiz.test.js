@@ -29,4 +29,25 @@ describe("NewQuiz", () => {
     expect(wrapper.state().quizName).toEqual(event.target.value)
     })
   })
+  // describe("handleSubmit", () => {
+  //   it("should be called on click of submit button", () => {
+  //     const wrapper = shallow(<NewQuiz />)
+
+  //     wrapper.instance().handleSubmit = jest.fn();
+  //     wrapper.update();
+  //     wrapper.find('button').simulate('click', { preventDefault() { } });
+  //     expect(wrapper.instance().handleSubmit).toHaveBeenCalled();
+  //   })
+  // })
+  describe("handleSubmit", () => {
+    it("should be called on click of submit button", () => {
+      const wrapper = shallow(<NewQuiz />)
+      const instance = wrapper.instance();
+      let handleSubmitStub = sinon.stub(instance, 'handleSubmit').callsFake(() => { });
+      instance.forceUpdate();
+      wrapper.update();
+      wrapper.find('form').simulate('submit');
+      expect(handleSubmitStub.callCount).toEqual(1)
+    })
+  })
 })

@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
-import axios from 'axios';
+// import axios from 'axios';
+import {Redirect} from 'react-router-dom';
+//REDUX
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 // Components
 //Style
 import './new-quiz.css'
+// Actions
+import {postNewQuizRequest} from './ducks/actions';
 
 class NewQuiz extends Component {
   constructor() {
@@ -20,63 +26,68 @@ class NewQuiz extends Component {
   handleSubmit(event) {
     event.preventDefault()
     console.log('handleSubmit')
-
-    axios.post('/', {
-        quizName: this.state.quizName,
-      })
-      .then(response => {
-        console.log('new quiz response: ')
-        console.log(response)
-        if (response.status === 200) {
-          // update App.js state
-          // this.props.updateQuiz({
-          //   loggedIn: true,
-          //   username: response.data.username
-          // })
-          // update the state to redirect to home
-          this.setState({
-            redirectTo: '/'
-          })
-        }
-      }).catch(error => {
-        console.log('new quiz error: ')
-        console.log(error);
-
+    this.props.postNewQuizRequest({
+      quizName: this.state.quizName
+    });
+    // if no error:
+    this.setState({
+      redirectTo: '/'
     })
+
   }
 
   render() {
-    return (
-      <div className="container">
-        <h4>New Quiz</h4>
-        <form className="form-horizontal">
-          <div className="form-group">
-            <div className="column label">
-              <label className="form-label" htmlFor="quizName">Quiz name</label>
-            </div>
-            <div className="column input">
-              <input className="form-input quiz-name"
-                type="text"
-                id="quizName"
-                name="quizName"
-                placeholder="Type your quizName"
-                value={this.state.quizName}
-                onChange={this.handleChange.bind(this)}
-              />
-            </div>
+      if (this.state.redirectTo) {
+        return <Redirect to={{ pathname: this.state.redirectTo }} />
+      } else {
+        return (
+          <div className="container">
+            <h4>New Quiz</h4>
+            <form 
+              className="form-horizontal"
+              onSubmit={this.handleSubmit.bind(this)}>
+              <div className="form-group">
+                <div className="column label">
+                  <label className="form-label" htmlFor="quizName">Quiz name</label>
+                </div>
+                <div className="column input">
+                  <input className="form-input quiz-name"
+                    type="text"
+                    id="quizName"
+                    name="quizName"
+                    placeholder="Type your quizName"
+                    value={this.state.quizName}
+                    onChange={this.handleChange.bind(this)}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <div className="column button-container"></div>
+                <input
+                  className="btn btn-primary"
+                  
+                  type="submit"
+                  value="Submit" />
+              </div>
+            </form>
+            
           </div>
-          <div className="form-group">
-            <div className="column button-container"></div>
-            <button
-              className="btn btn-primary"
-              onClick={this.handleSubmit.bind(this)}
-              type="submit">Submit</button>
-          </div>
-        </form>
         
-      </div>
-    )
+      )
+    }
   }
 }
 
-export default NewQuiz
+function mapStateToProps(state) {
+    return {
+        quizName: state.quizName
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        postNewQuizRequest: postNewQuizRequest,
+    }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewQuiz);
