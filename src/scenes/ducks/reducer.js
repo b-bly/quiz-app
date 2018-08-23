@@ -7,7 +7,8 @@ const INITIAL_STATE = {
   error: null,
 };
 
-function quizReducer(state = INITIAL_STATE, action) {
+// state is only assigned INITIAL_STATE if it is undefined when quizReducer is called
+function quizReducer(state = INITIAL_STATE, action) { 
   switch (action.type) {
     case types.POST_NEW_QUIZ_REQUEST: {
       return {
@@ -16,8 +17,6 @@ function quizReducer(state = INITIAL_STATE, action) {
       };
     }
     case types.POST_NEW_QUIZ_ERROR: {
-      console.log('reducer postnewquizerror: ');
-      console.log(action);
       return {
         ...state,
         isLoading: false,
@@ -26,10 +25,21 @@ function quizReducer(state = INITIAL_STATE, action) {
     }
     case types.POST_NEW_QUIZ_SUCCESS: {
       return {
-        ...action.payload,
+        ...state,
+        quizzes: [
+          ...state.quizzes,
+          action.payload.quizName
+        ],
         isLoading: false,
         error: null,
       };
+    }
+    case types.RESET_QUIZ: {
+      return {
+        ...state,
+        isLoading: true,
+        error: null,
+      }
     }
     default: {
       return { ...state };

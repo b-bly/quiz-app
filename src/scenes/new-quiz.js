@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 //Style
 import './new-quiz.css'
 // Actions
-import {postNewQuizRequest} from './ducks/actions';
+import { postNewQuizRequest, resetQuiz } from './ducks/actions';
 
 class NewQuiz extends Component {
   constructor() {
@@ -19,22 +19,9 @@ class NewQuiz extends Component {
       error: null,
     };
   }
-  componentDidUpdate () { // prevProps, prevState, snapshot
-    // *** problems with re-rendering too many times with setState ***
-    // console.log('component did update')
-    // console.log(this.props);
-    // if (this.props.quiz.isLoading === false) {
-    //   console.log('this.props.isLoading === false')
-    //   if (this.props.quiz.error === null && this.state.redirictTo === null) {
-    //     this.setState({
-    //       redirectTo: '/'
-    //     })
-    //   } else if (this.state.error === null) {
-    //     this.setState({
-    //       error: this.props.quiz.error
-    //     })
-    //   }
-    // }
+
+  componentWillUnmount () {
+    if (this.props.quiz.isLoading === false) this.props.resetQuiz();
   }
 
   handleChange(event) {
@@ -49,7 +36,6 @@ class NewQuiz extends Component {
     this.props.postNewQuizRequest({
       quizName: this.state.quizName
     });
-    // error handling in componentDidUpdate
   }
 
   render() {
@@ -106,6 +92,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         postNewQuizRequest: postNewQuizRequest,
+        resetQuiz: resetQuiz,
     }, dispatch);
 }
 

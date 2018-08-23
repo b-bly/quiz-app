@@ -14,3 +14,7 @@ export const postNewQuizError = error => ({
   type: types.POST_NEW_QUIZ_ERROR,
   error
 });
+
+export const resetQuiz = () => ({
+  type: types.RESET_QUIZ
+});
