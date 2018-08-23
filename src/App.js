@@ -5,8 +5,8 @@ import { Route } from 'react-router-dom'
 // style
 import './App.css';
 // Components
-import Home from './scenes/home';
-import NewQuiz from './scenes/new-quiz';
+import Home from './scenes/Home/home';
+import NewQuiz from './scenes/NewQuiz/new-quiz';
 
 class App extends Component {
   render() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import Home from './home';
-import '../test/helpers';
+import '../../test/helpers';
 import { Link } from 'react-router-dom'
 
 it("always renders a div", () => {

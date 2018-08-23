@@ -1,6 +1,6 @@
 import React from 'react';
 import NewQuiz from './new-quiz';
-import '../test/helpers';
+import '../../test/helpers';
 
 // wrapper.find('a').simulate('click');
 // const wrapper = shallow(<Foo />);
