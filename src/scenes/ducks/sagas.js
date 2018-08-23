@@ -1,4 +1,4 @@
-import { put, takeLatest, select } from 'redux-saga/effects';
+import { put, call, takeLatest, select } from 'redux-saga/effects';
 import axios from 'axios';
 //constants
 import * as types from './constants';
@@ -9,21 +9,21 @@ import { postNewQuizSuccess, postNewQuizError } from './actions';
 
 // async data
 const postNewQuizAsync = (data) => {
-  axios.post('/', {
-      data,
-    })
-    .then(response => {
-      console.log('new quiz response: ')
-      console.log(response)
-      if (response.status === 200) {
-        // update the state to redirect to home
+  return axios.post('/quiz', {
+    data,
+  });
+  // .then(response => {
+  //   console.log('new quiz response: ')
+  //   console.log(response)
+  //   return response;
+  //   if (response.status === 200) {
 
-      }
-    }).catch(error => {
-      console.log('new quiz error: ')
-      console.log(error);
-      return { error }
-  })
+  //   } // Can't catch error here or it won't get reported to redux?
+  // }).catch(error => {
+  //   console.log('new quiz error: ')
+  //   console.log({error});
+  //   return { error }
+  // })
 }
 //Saga
 function* postNewQuiz(action) {
@@ -34,15 +34,12 @@ function* postNewQuiz(action) {
 
     // to do use selectors to get data
     const data = action.payload;
-
-    yield postNewQuizAsync({
-      ...data
-    });
+    yield call(postNewQuizAsync, {...data});
 
     yield put(postNewQuizSuccess({ ...data }));
   } catch (error) {
     console.log('Error postNewQuiz saga');
-    yield put(postNewQuizError(error));
+    yield put(postNewQuizError({...error}));
   }
 }
 

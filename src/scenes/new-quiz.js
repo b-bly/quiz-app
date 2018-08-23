@@ -15,8 +15,28 @@ class NewQuiz extends Component {
     super();
     this.state = {
       quizName: '',
+      redirectTo: null,
+      error: null,
     };
   }
+  componentDidUpdate () { // prevProps, prevState, snapshot
+    // *** problems with re-rendering too many times with setState ***
+    // console.log('component did update')
+    // console.log(this.props);
+    // if (this.props.quiz.isLoading === false) {
+    //   console.log('this.props.isLoading === false')
+    //   if (this.props.quiz.error === null && this.state.redirictTo === null) {
+    //     this.setState({
+    //       redirectTo: '/'
+    //     })
+    //   } else if (this.state.error === null) {
+    //     this.setState({
+    //       error: this.props.quiz.error
+    //     })
+    //   }
+    // }
+  }
+
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
@@ -29,20 +49,19 @@ class NewQuiz extends Component {
     this.props.postNewQuizRequest({
       quizName: this.state.quizName
     });
-    // if no error:
-    this.setState({
-      redirectTo: '/'
-    })
-
+    // error handling in componentDidUpdate
   }
 
   render() {
-      if (this.state.redirectTo) {
-        return <Redirect to={{ pathname: this.state.redirectTo }} />
+      if (this.props.quiz.isLoading === false && this.props.quiz.error === null) {
+        return <Redirect to={{ pathname: '/' }} />
       } else {
         return (
           <div className="container">
             <h4>New Quiz</h4>
+            { this.props.quiz.error !== null && 
+              <p>There was an error submitting your quiz.  Please try again.</p>
+            }
             <form 
               className="form-horizontal"
               onSubmit={this.handleSubmit.bind(this)}>
@@ -80,7 +99,7 @@ class NewQuiz extends Component {
 
 function mapStateToProps(state) {
     return {
-        quizName: state.quizName
+        ...state
     };
 }
 

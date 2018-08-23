@@ -4,6 +4,9 @@ const morgan = require('morgan')
 const app = express()
 const PORT = 8070
 
+// Routes
+const quiz = require('./routes/quiz')
+
 // MIDDLEWARE
 app.use(morgan('dev'))
 app.use(
@@ -14,13 +17,10 @@ app.use(
 app.use(bodyParser.json())
 
 //routing
-app.post('/', (req, res, next) => {
-  console.log('server post quizName: ');
-  console.log(req.body.quizName)
-  res.end()
-})
+app.use('/quiz', quiz)
 
 // Starting Server 
 app.listen(PORT, () => {
   console.log(`App listening on PORT: ${PORT}`)
 })
+
