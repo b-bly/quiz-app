@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const app = express()
-const PORT = 8070
+const PORT = 8080
 
 // Routes
 const quiz = require('./routes/quiz')

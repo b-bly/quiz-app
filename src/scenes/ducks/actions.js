@@ -1,8 +1,8 @@
 import * as types from './constants';
 
-export const postNewQuizRequest = data => ({
+export const postNewQuizRequest = () => ({
   type: types.POST_NEW_QUIZ_REQUEST,
-  payload: data
+  payload: null
 });
 
 export const postNewQuizSuccess = data => ({
@@ -17,4 +17,20 @@ export const postNewQuizError = error => ({
 
 export const resetQuiz = () => ({
   type: types.RESET_QUIZ
+});
+
+// getQuizzes
+export const getQuizzesRequest = data => ({
+  type: types.GET_QUIZZES_REQUEST,
+  payload: data
+});
+
+export const getQuizzesSuccess = data => ({
+  type: types.GET_QUIZZES_SUCCESS,
+  payload: data
+});
+
+export const getQuizzesError = error => ({
+  type: types.GET_QUIZZES_ERROR,
+  error
 });

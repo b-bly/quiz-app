@@ -15,7 +15,9 @@
     "react-scripts": "1.1.4",
     "redux": "^4.0.0",
     "redux-form": "^7.4.2",
-    "redux-saga": "^0.16.0"
+    "redux-saga": "^0.16.0",
+    "reselect": "^3.0.1",
+    "styled-components": "^3.4.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -36,5 +38,5 @@
     "redux-logger": "^3.0.6",
     "sinon": "^6.1.5"
   },
-  "proxy": "http://localhost:8070"
+  "proxy": "http://localhost:8080"
 }

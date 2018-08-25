@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-// import axios from 'axios';
 import {Redirect} from 'react-router-dom';
 //REDUX
 import { connect } from 'react-redux';
@@ -25,10 +24,9 @@ class NewQuiz extends Component {
     if (this.props.quiz.isLoading === false) this.props.resetQuiz();
   }
 
-  submit = name => {
+  submit = () => {
     console.log('new quiz form submit: ')
-    console.log(name);
-    
+    this.props.postNewQuizRequest();
   }
 
   render() {
@@ -36,15 +34,13 @@ class NewQuiz extends Component {
         return <Redirect to={{ pathname: '/' }} />
       } else {
         return (
-          <div className="container">
+          <div className="container" >
             <h4>New Quiz</h4>
             { this.props.quiz.error !== null && 
               <p>There was an error submitting your quiz.  Please try again.</p>
             }
-            <NewQuizForm onSubmit={this.submit.bind(this)} />
-            
+            <NewQuizForm onSubmit={this.submit.bind(this)}/>
           </div>
-        
       )
     }
   }

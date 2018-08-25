@@ -1,8 +1,19 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
+import renderField from './render-field'
+
+
+const validate = values => {
+  const errors = {}
+  if (!values.quizName) {
+    errors.quizName = 'Required'
+  }
+  return errors;
+}
 
 let NewQuizForm = props => {
   const { handleSubmit } = props
+
   return (
 
      <form 
@@ -19,7 +30,7 @@ let NewQuizForm = props => {
               id="quizName"
               name="quizName"
               placeholder="Type your quizName"
-              component="input"
+              component={renderField}
             />
           </div>
         </div>
@@ -31,28 +42,14 @@ let NewQuizForm = props => {
             value="Submit" />
         </div>
       </form>
-
-    // <form onSubmit={handleSubmit}>
-    //   <div>
-    //     <label htmlFor="firstName">First Name</label>
-    //     <Field name="firstName" component="input" type="text" />
-    //   </div>
-    //   <div>
-    //     <label htmlFor="lastName">Last Name</label>
-    //     <Field name="lastName" component="input" type="text" />
-    //   </div>
-    //   <div>
-    //     <label htmlFor="email">Email</label>
-    //     <Field name="email" component="input" type="email" />
-    //   </div>
-    //   <button type="submit">Submit</button>
-    // </form>
   )
 }
 
+
 NewQuizForm = reduxForm({
   // a unique name for the form
-  form: 'newQuiz'
+  form: 'newQuiz',
+  validate
 })(NewQuizForm)
 
 export default NewQuizForm;

@@ -41,6 +41,25 @@ function quizReducer(state = INITIAL_STATE, action) {
         error: null,
       }
     }
+    // Get quizzes
+    case types.GET_QUIZZES_REQUEST: {
+      return {
+        ...state
+      }
+    }
+    case types.GET_QUIZZES_SUCCESS: {
+      return {
+        ...state, 
+        quizzes: action.payload,
+        error: null,
+      }
+    }
+    case types.GET_QUIZZES_ERROR: {
+      return {
+        ...state,
+        error: action.error
+      }
+    }
     default: {
       return { ...state };
     }
