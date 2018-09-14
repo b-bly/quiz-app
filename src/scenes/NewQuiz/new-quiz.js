@@ -7,8 +7,19 @@ import { bindActionCreators } from 'redux';
 import NewQuizForm from './new-quiz-form';
 //Style
 import './new-quiz.css'
+import styled from 'styled-components'
 // Actions
 import { postNewQuizRequest, resetQuiz } from '../ducks/actions';
+
+const Container = styled.div`
+  background-color: rgb(236, 236, 236);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`
 
 class NewQuiz extends Component {
   constructor() {
@@ -34,13 +45,13 @@ class NewQuiz extends Component {
         return <Redirect to={{ pathname: '/' }} />
       } else {
         return (
-          <div className="container" >
-            <h4>New Quiz</h4>
-            { this.props.quiz.error !== null && 
-              <p>There was an error submitting your quiz.  Please try again.</p>
-            }
-            <NewQuizForm onSubmit={this.submit.bind(this)}/>
-          </div>
+          <Container>
+              <h4>New Quiz</h4>
+              { this.props.quiz.error !== null && 
+                <p>There was an error submitting your quiz.  Please try again.</p>
+              }
+              <NewQuizForm onSubmit={this.submit.bind(this)}/>
+          </Container>
       )
     }
   }

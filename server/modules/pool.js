@@ -4,15 +4,15 @@
 * It will look something like this:
 **/
 
-var pg = require('pg');
-var url = require('url');
-var config = {};
+const { Pool } = require('pg');
+const url = require('url');
+let config = {}; 
 
 if (process.env.DATABASE_URL) {
   // Heroku gives a url, not a connection object
   // https://github.com/brianc/node-pg-pool
-  var params = url.parse(process.env.DATABASE_URL);
-  var auth = params.auth.split(':');
+  const params = url.parse(process.env.DATABASE_URL);
+  const auth = params.auth.split(':');
 
   config = {
     user: auth[0],
@@ -37,4 +37,4 @@ if (process.env.DATABASE_URL) {
   };
 }
 
-module.exports = new pg.Pool(config);
+module.exports = new Pool(config);

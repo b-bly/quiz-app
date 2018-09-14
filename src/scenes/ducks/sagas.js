@@ -33,10 +33,66 @@ function* postNewQuiz(action) {
     // to do use selectors to get data
     const data = yield select(makeSelectNewQuiz());
     console.log(data);
-    yield call(postNewQuizAsync, {...data});
+    // Sample quiz data
+    // A:    "bla"
+    // B:"bla bla"
+    // C:"something"
+    // D: "puppies"
+    // text:"what?"
+    // name:"Ma ma mia"
+    // correct_answer: 'A'
+   
 
-    yield put(postNewQuizSuccess({ ...data }));
+    // redux state sample
+        // {
+      //   quizzes: [
+      //     {
+      //        id: '',
+      //       name: '',
+      //       type: '',
+      //       questions: [
+      //         {
+      //           text: '',
+      //           correct_answer: '',
+      //           a: ''
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // }
+
+    const formattedData = {
+      name: data.quizName,
+      type: 'multiple choice', // change when this is dynamic
+      questions: [
+        {
+         correct_answer: data.correct_answer,
+         text: data.text
+        }
+      ]
+    }
+    const alphabet = []
+    for (let i = 97; i < 97 + 26; i++) {
+      const nextLetter = String.fromCharCode(i)
+      alphabet.push(nextLetter)
+    }
+    // handle all answers a, b, c etc
+    for (let key in data) {
+      for (let letter of alphabet) {
+        if (key === letter) {
+          formattedData.questions[0][letter] = data[letter]
+        } 
+      }
+    }
+    
+    console.log('formatted data')
+    console.log(formattedData);
+    
+    yield call(postNewQuizAsync, {...formattedData});
+
+    yield put(postNewQuizSuccess({ ...formattedData }));
   } catch (error) {
+    console.log(error);
     yield put(postNewQuizError({...error}));
   }
 }

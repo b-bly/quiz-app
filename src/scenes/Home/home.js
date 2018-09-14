@@ -23,17 +23,21 @@ const QuizContainer = styled.div`
   text-align: left;
   padding: 10px;
   line-height: 1.4em;
+  &:hover {
+    background-color: rgb(236, 236, 236);
+  }
 `
+// They should add how to do pseudo selectors to styled components
+// to the documentation
+
 const Name = styled.div`
   font-size: 18px;
   color: rgb(63, 63, 63);
 `
-
 const Questions = styled.div`
   font-size: 15px;
   color: rgb(63, 63, 63);
 `
-
 const Title = styled.div`
   padding: .5em;
 `
@@ -53,8 +57,8 @@ class Home extends Component {
     
     const listItems = this.props.quiz.quizzes.map((quiz, i) =>
     <QuizContainer key={i.toString()}>
-      <Name>{quiz.name}</Name>
-      <Questions>0</Questions>
+      <Name>Quiz: {quiz.name}</Name>
+      <Questions>Questions: 0</Questions>
     </QuizContainer>
     );
     return (

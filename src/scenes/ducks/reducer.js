@@ -24,11 +24,26 @@ function quizReducer(state = INITIAL_STATE, action) {
       };
     }
     case types.POST_NEW_QUIZ_SUCCESS: {
+      // {
+      //   quizzes: [
+      //     {
+      //        id: '',
+      //       name: '',
+      //       type: '',
+      //       questions: [
+      //         {
+      //           label: '',
+      //           correctAnswer: ''
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // }
       return {
         ...state,
         quizzes: [
           ...state.quizzes,
-          action.payload.quizName
+          action.payload
         ],
         isLoading: false,
         error: null,

@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
-const Input = styled.input`
+const TextArea = styled.textarea`
   font-size: 16px;
   padding: 5px;
   outline:0;
@@ -12,20 +12,21 @@ const Input = styled.input`
   font-size: 16px;
 `
 
-const renderField = ({
+const renderTextArea = ({
   input,
   label,
   type,
   meta: { touched, error, warning }
 }) => (
-  <Fragment>
-
-      <Input {...input} placeholder={label} type={type} />
+  <div>
+    <label>{label}</label>
+    <div>
+      <TextArea {...input} placeholder={label} type={type} />
       {touched &&
         ((error && <span>{error}</span>) ||
           (warning && <span>{warning}</span>))}
-
-  </Fragment>
+    </div>
+  </div>
 );
 
-export default renderField;
+export default renderTextArea;
