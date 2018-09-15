@@ -5,15 +5,15 @@ import * as types from './constants';
 //selectors
 
 //actions
-import { 
-  postNewQuizSuccess, 
+import {
+  postNewQuizSuccess,
   postNewQuizError,
   getQuizzesSuccess,
   getQuizzesError,
 } from './actions';
 
 // Selectors
-import {makeSelectNewQuiz} from './selectors';
+import { makeSelectNewQuiz } from './selectors';
 
 // async data
 const postNewQuizAsync = (data) => {
@@ -41,33 +41,33 @@ function* postNewQuiz(action) {
     // text:"what?"
     // name:"Ma ma mia"
     // correct_answer: 'A'
-   
+
 
     // redux state sample
-        // {
-      //   quizzes: [
-      //     {
-      //        id: '',
-      //       name: '',
-      //       type: '',
-      //       questions: [
-      //         {
-      //           text: '',
-      //           correct_answer: '',
-      //           a: ''
-      //         }
-      //       ]
-      //     }
-      //   ]
-      // }
+    // {
+    //   quizzes: [
+    //     {
+    //        id: '',
+    //       name: '',
+    //       type: '',
+    //       questions: [
+    //         {
+    //           text: '',
+    //           correct_answer: '',
+    //           a: ''
+    //         }
+    //       ]
+    //     }
+    //   ]
+    // }
 
     const formattedData = {
       name: data.quizName,
       type: 'multiple choice', // change when this is dynamic
       questions: [
         {
-         correct_answer: data.correct_answer,
-         text: data.text
+          correct_answer: data.correct_answer,
+          text: data.text
         }
       ]
     }
@@ -81,19 +81,19 @@ function* postNewQuiz(action) {
       for (let letter of alphabet) {
         if (key === letter) {
           formattedData.questions[0][letter] = data[letter]
-        } 
+        }
       }
     }
-    
+
     console.log('formatted data')
     console.log(formattedData);
-    
-    yield call(postNewQuizAsync, {...formattedData});
+
+    yield call(postNewQuizAsync, { ...formattedData });
 
     yield put(postNewQuizSuccess({ ...formattedData }));
   } catch (error) {
     console.log(error);
-    yield put(postNewQuizError({...error}));
+    yield put(postNewQuizError({ ...error }));
   }
 }
 
