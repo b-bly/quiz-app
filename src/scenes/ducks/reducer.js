@@ -65,6 +65,7 @@ function quizReducer(state = INITIAL_STATE, action) {
     case types.GET_QUIZZES_SUCCESS: {
       return {
         ...state, 
+        isLoading: false,
         quizzes: action.payload,
         error: null,
       }

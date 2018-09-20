@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 //REDUX
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -31,7 +31,7 @@ class NewQuiz extends Component {
     };
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.props.quiz.isLoading === false) this.props.resetQuiz();
   }
 
@@ -41,33 +41,33 @@ class NewQuiz extends Component {
   }
 
   render() {
-      if (this.props.quiz.isLoading === false && this.props.quiz.error === null) {
-        return <Redirect to={{ pathname: '/' }} />
-      } else {
-        return (
-          <Container>
-              <h4>New Quiz</h4>
-              { this.props.quiz.error !== null && 
-                <p>There was an error submitting your quiz.  Please try again.</p>
-              }
-              <NewQuizForm onSubmit={this.submit.bind(this)}/>
-          </Container>
+    if (this.props.quiz.isLoading === false && this.props.quiz.error === null) {
+      return <Redirect to={{ pathname: '/' }} />
+    } else {
+      return (
+        <Container>
+          <h4>New Quiz</h4>
+          {this.props.quiz.error !== null &&
+            <p>There was an error submitting your quiz.  Please try again.</p>
+          }
+          <NewQuizForm onSubmit={this.submit.bind(this)} />
+        </Container>
       )
     }
   }
 }
 
 function mapStateToProps(state) {
-    return {
-        ...state
-    };
+  return {
+    ...state
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        postNewQuizRequest: postNewQuizRequest,
-        resetQuiz: resetQuiz,
-    }, dispatch);
+  return bindActionCreators({
+    postNewQuizRequest: postNewQuizRequest,
+    resetQuiz: resetQuiz,
+  }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewQuiz);

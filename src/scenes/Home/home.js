@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { Redirect } from 'react-router-dom';
+
 //REDUX
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -8,7 +10,7 @@ import { bindActionCreators } from 'redux';
 import '../NewQuiz/new-quiz.css'
 
 // Actions
-import {getQuizzesRequest} from '../ducks/actions';
+import { getQuizzesRequest } from '../ducks/actions';
 const Container = styled.div`
   background-color: rgb(236, 236, 236);
   width: 100%;
@@ -23,6 +25,7 @@ const QuizContainer = styled.div`
   text-align: left;
   padding: 10px;
   line-height: 1.4em;
+  cursor: pointer;
   &:hover {
     background-color: rgb(236, 236, 236);
   }
@@ -42,50 +45,100 @@ const Title = styled.div`
   padding: .5em;
 `
 
+// regexp@^1.7.0 understands.<Redirect
+//   to={{
+//     pathname: "/login",
+//     search: "?utm=your+face",
+//     state: { referrer: currentLocation }
+//   }}
+// />
 
-class Home extends Component {
-  constructor() {
-    super()
+class QuizListItem extends Component {
+  constructor(props) {
+    super(props)
   }
-  componentDidMount() {
-    this.props.getQuizzesRequest();
+
+  loadQuiz() {
+    this.props.loadQuiz(this.props.quiz)
   }
+
   render() {
-    console.log('******** props **********')
-    console.log(this.props.quiz.quizzes)
-    console.log(typeof this.props.quiz.quizzes)
-    
-    const listItems = this.props.quiz.quizzes.map((quiz, i) =>
-    <QuizContainer key={i.toString()}>
-      <Name>Quiz: {quiz.name}</Name>
-      <Questions>Questions: 0</Questions>
-    </QuizContainer>
-    );
     return (
-      <Fragment>
-        <Container>
-          <Title>It's good to be home</Title>
-          <Link to="/new-quiz" className="btn text-secondary">
-            <span>New Quiz</span>
-          </Link>
-          {listItems}
-        </Container>
-      
-      </Fragment>
+      <QuizContainer
+        onClick={this.loadQuiz.bind(this)}
+        >
+        <Name>Quiz: {this.props.quiz.name}</Name>
+        <Questions>Questions: {this.props.quiz.questions.length}</Questions>
+      </QuizContainer>
     )
   }
 }
 
+class Home extends Component {
+  constructor() {
+    super()
+    this.state = {
+      redirectTo: null
+    }
+  }
+  componentDidMount() {
+    this.props.getQuizzesRequest();
+  }
+
+  loadQuiz(quiz) {
+    this.setState({
+      redirectTo: {
+        pathname: '/view_quiz/?quiz_id=' + quiz.quiz_id,
+        state: quiz
+      }
+    })
+  }
+
+  render() {
+    console.log('******** props **********')
+    console.log(this.props.quiz.quizzes)
+    console.log(typeof this.props.quiz.quizzes)
+
+    const listItems = this.props.quiz.quizzes.map((quiz, i) =>
+      <QuizListItem
+        loadQuiz={this.loadQuiz.bind(this)}
+        key={i.toString()}
+        quiz={quiz}
+      />
+    );
+    if (this.state.redirectTo) {
+      return (
+      <Redirect
+        to={this.state.redirectTo}
+      />
+      )
+    } else {
+      return (
+        <Fragment>
+          <Container>
+            <Title>It's good to be home</Title>
+            <Link to="/new-quiz" className="btn text-secondary">
+              <span>New Quiz</span>
+            </Link>
+            {listItems}
+          </Container>
+
+        </Fragment>
+      )
+    }
+  }
+}
+
 function mapStateToProps(state) {
-    return {
-        ...state
-    };
+  return {
+    ...state
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        getQuizzesRequest: getQuizzesRequest,
-    }, dispatch);
+  return bindActionCreators({
+    getQuizzesRequest: getQuizzesRequest,
+  }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

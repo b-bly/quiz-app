@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 // Redux form
 import { Field, reduxForm } from 'redux-form'
 import renderField from './render-field'
@@ -6,33 +6,7 @@ import renderTextArea from './renderTextArea'
 import renderMarkCorrectField from './render-mark-correct-field'
 // Style
 import styled from 'styled-components'
-
-// Colors
-const colors = {
-  blue:    '#007bff', // primary
-  indigo:  '#6610f2',
-  purple:  '#6f42c1',
-  pink:    '#e83e8c',
-  red:     '#dc3545', // danger
-  orange:  '#fd7e14',
-  yellow:  '#ffc107', // warning
-  green:   '#28a745', // success
-  teal:    '#20c997',
-  cyan:    '#17a2b8', // info
-  white:    '#fff',
-  gray100: '#f8f9fa', // light
-  gray200: '#e9ecef',
-  gray300: '#dee2e6',
-  gray400: '#ced4da',
-  gray500: '#adb5bd',
-  gray600: '#868e96', // secondary
-  gray700: '#495057',
-  gray800: '#343a40', // dark
-  gray900: '#212529',
-  black:    '#000'
-}
-
-// Grays
+import { colors } from '../Style/constants'
 
 
 const validate = values => {
@@ -141,37 +115,37 @@ const MultipleChoiceAnswer = (props) => {
   const { answerLetter, answerNumber, correctAnswer } = props
   const name = answerLetter;
   const isCorrect = name === correctAnswer;
-  
+
   return (
     <Row>
       <FormGroup>
         {/* make this button a separate component */}
-        <Field 
-            type="button"
-            name="correct_answer"
-            markCorrect={ props.markCorrect }
-            answerLetter={ answerLetter }
-            color={ isCorrect ? colors.green : colors.gray200 }
-            component={ renderMarkCorrectField }
-          />
+        <Field
+          type="button"
+          name="correct_answer"
+          markCorrect={props.markCorrect}
+          answerLetter={answerLetter}
+          color={isCorrect ? colors.green : colors.gray200}
+          component={renderMarkCorrectField}
+        />
         <FormContainer>
           <FormLabel htmlFor={name} >{answerLetter}</FormLabel>
         </FormContainer>
-        <FormContainer style={{flex: '1'}}>
-          <Field 
+        <FormContainer style={{ flex: '1' }}>
+          <Field
             type="text"
-            name={ name }
+            name={name}
             placeholder="Type the answer"
             component={renderField}
           />
         </FormContainer>
-          { props.removeButton &&
-            <Button 
+        {props.removeButton &&
+          <Button
             color="orange"
             type="button"
             onClick={props.removeAnswer}
-            >-</Button>
-          }
+          >-</Button>
+        }
       </FormGroup>
     </Row>
 
@@ -179,7 +153,7 @@ const MultipleChoiceAnswer = (props) => {
 }
 
 class NewQuizForm extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.numberOfAnswerBlanks = 1;
     this.state = {
@@ -189,7 +163,7 @@ class NewQuizForm extends Component {
     this.answerLettersMap = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
   }
 
-  addAnswerBlank () {
+  addAnswerBlank() {
     console.log('clicked');
     this.numberOfAnswerBlanks++
     const newLetter = this.answerLettersMap[this.numberOfAnswerBlanks - 1]
@@ -198,13 +172,13 @@ class NewQuizForm extends Component {
     this.setState({
       answerLetters: answerLetterCopy
     })
-    
+
     console.log(this.state.answerLetters)
   }
 
-  removeAnswer () {
+  removeAnswer() {
     console.log('removeAnswer')
-    this.numberOfAnswerBlanks --
+    this.numberOfAnswerBlanks--
     const answerLetterCopy = this.state.answerLetters.slice()
     answerLetterCopy.pop()
     this.setState({
@@ -212,39 +186,39 @@ class NewQuizForm extends Component {
     })
   }
 
-  markCorrect (correctAnswer) {
+  markCorrect(correctAnswer) {
     console.log('markCorrect');
     console.log(correctAnswer);
     this.setState({
       correctAnswer: correctAnswer
     });
-    
+
   }
 
-  render () {
-      const { handleSubmit } = this.props
+  render() {
+    const { handleSubmit } = this.props
 
-  // let answerBlanks = this.answerLetters.map((letter, i) =>
-  //   <MultipleChoiceAnswer 
-  //     key={i.toString()}
-  //     answerLetter={letter}
-  //     answerNumber="1"
-  //   />
-  // )
+    // let answerBlanks = this.answerLetters.map((letter, i) =>
+    //   <MultipleChoiceAnswer 
+    //     key={i.toString()}
+    //     answerLetter={letter}
+    //     answerNumber="1"
+    //   />
+    // )
 
-//   CREATE TABLE quiz(
-// 	id SERIAL PRIMARY KEY,
-// 	name VARCHAR(80) NOT NULL,
-// 	questions json
-// );
+    //   CREATE TABLE quiz(
+    // 	id SERIAL PRIMARY KEY,
+    // 	name VARCHAR(80) NOT NULL,
+    // 	questions json
+    // );
 
-// questions: [{ questionText: '', anwers: [{letter: '', correct: bool, text: ''}]}]
+    // questions: [{ questionText: '', anwers: [{letter: '', correct: bool, text: ''}]}]
 
 
     return (
       <Form
         onSubmit={handleSubmit}
-        >
+      >
         <FormGroup>
           <Column>
             <FormLabel htmlFor="quizName">Quiz name</FormLabel>
@@ -277,37 +251,37 @@ class NewQuizForm extends Component {
               />
             </Column>
           </FormGroup>
-          
-          
-            {this.state.answerLetters.map((letter, i) => 
-              <MultipleChoiceAnswer 
-                key={i.toString()}
-                answerLetter={letter.toLowerCase()}
-                answerNumber="1"
-                removeButton={ this.state.answerLetters.length === i + 1 &&
-                this.state.answerLetters.length > 1 }
-                removeAnswer={this.removeAnswer.bind(this)}
-                correctAnswer={this.state.correctAnswer}
-                markCorrect={this.markCorrect.bind(this)}
-              />
-            )}
-              
-           
+
+
+          {this.state.answerLetters.map((letter, i) =>
+            <MultipleChoiceAnswer
+              key={i.toString()}
+              answerLetter={letter.toLowerCase()}
+              answerNumber="1"
+              removeButton={this.state.answerLetters.length === i + 1 &&
+                this.state.answerLetters.length > 1}
+              removeAnswer={this.removeAnswer.bind(this)}
+              correctAnswer={this.state.correctAnswer}
+              markCorrect={this.markCorrect.bind(this)}
+            />
+          )}
+
+
           <ButtonContainer>
             <Button
               type="button"
               onClick={this.addAnswerBlank.bind(this)}
               color={colors.blue}
             >+</Button>
-          </ButtonContainer>  
+          </ButtonContainer>
         </QuestionContainer>
         <FormGroup>
           <Column></Column>
-            <input
-              className="btn btn-primary"
-              type="submit"
-              value="Submit" 
-            />
+          <input
+            className="btn btn-primary"
+            type="submit"
+            value="Submit"
+          />
         </FormGroup>
       </Form>
     )

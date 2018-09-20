@@ -7,6 +7,8 @@ import './App.css';
 // Components
 import Home from './scenes/Home/home';
 import NewQuiz from './scenes/NewQuiz/new-quiz';
+import QuizView from './scenes/QuizView/quiz-view'
+
 
 class App extends Component {
   render() {
@@ -19,6 +21,10 @@ class App extends Component {
         <Route
           path="/new-quiz"
           component={NewQuiz}
+        />
+        <Route
+          path="/view_quiz"
+          component={QuizView}
         />
       </div>
     );

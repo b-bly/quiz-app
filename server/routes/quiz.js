@@ -160,7 +160,7 @@ router.get('/', (req, res) => {
                                     const quizzes = {};
                                     quizzesList.forEach((quiz, i) => {
                                         quizzes[quiz.quiz_id] = {
-                                            id: quiz.quiz_id,
+                                            quiz_id: quiz.quiz_id,
                                             name: quiz.name,
                                             type: quiz.type,
                                             questions: []
