@@ -8,7 +8,7 @@ import './App.css';
 import Home from './scenes/Home/home';
 import NewQuiz from './scenes/NewQuiz/new-quiz';
 import QuizView from './scenes/QuizView/quiz-view'
-
+import AddQuestion from './scenes/NewQuiz/add-question.js'
 
 class App extends Component {
   render() {
@@ -26,6 +26,11 @@ class App extends Component {
           path="/view_quiz"
           component={QuizView}
         />
+        <Route
+          path="/add-question"
+          component={AddQuestion}
+        />
+        
       </div>
     );
   }

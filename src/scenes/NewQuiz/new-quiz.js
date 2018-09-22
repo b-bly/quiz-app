@@ -28,6 +28,7 @@ class NewQuiz extends Component {
       quizName: '',
       redirectTo: null,
       error: null,
+      submitClicked: null,
     };
   }
 
@@ -38,10 +39,15 @@ class NewQuiz extends Component {
   submit = () => {
     console.log('new quiz form submit: ')
     this.props.postNewQuizRequest();
+    this.setState({
+      submitClicked: true
+    })
   }
 
   render() {
-    if (this.props.quiz.isLoading === false && this.props.quiz.error === null) {
+    if (this.props.quiz.isLoading === false && 
+      this.props.quiz.error === null &&
+      this.state.submitClicked) {
       return <Redirect to={{ pathname: '/' }} />
     } else {
       return (

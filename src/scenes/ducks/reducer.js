@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   quizzes: [],
   questions: null,
   error: null,
+  selectedQuiz: null,
 };
 
 // state is only assigned INITIAL_STATE if it is undefined when quizReducer is called
@@ -49,6 +50,52 @@ function quizReducer(state = INITIAL_STATE, action) {
         error: null,
       };
     }
+    case types.POST_NEW_QUESTION_REQUEST: {
+      return {
+        ...state,
+        error: null,
+      };
+    }
+    case types.POST_NEW_QUESTION_ERROR: {
+      return {
+        ...state,
+        isLoading: false,
+        error: action.error
+      };
+    }
+    case types.POST_NEW_QUESTION_SUCCESS: {
+      // {
+      //   quizzes: [
+      //     {
+      //        id: '',
+      //       name: '',
+      //       type: '',
+      //       questions: [
+      //         {
+      //           label: '',
+      //           correctAnswer: ''
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // }
+      return {
+        ...state,
+        quizzes: [
+          ...Object.assign([], state.quizzes).map((quiz, i) => {
+            if (action.payload.quiz_id === quiz.quiz_id) {
+              const updatedQuiz = { ...quiz }
+              updatedQuiz.questions = action.payload.questions
+              return updatedQuiz
+            } else {
+              return quiz
+            }
+          })
+        ],
+        isLoading: false,
+        error: null,
+      };
+    }
     case types.RESET_QUIZ: {
       return {
         ...state,
@@ -74,6 +121,13 @@ function quizReducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         error: action.error
+      }
+    }
+    case types.SELECT_QUIZ: {
+      console.log('select quiz reducer:', action.payload)
+      return {
+        ...state,
+        selectedQuiz: action.payload
       }
     }
     default: {

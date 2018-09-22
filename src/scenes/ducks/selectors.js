@@ -1,8 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectInvoicesState = state => state.invoicesState;
-
-const selectGlobalState = state => state.globalState;
+const selectQuiz = state => state.quiz;
 
 const selectFormState = state => state.form;
 
@@ -16,6 +14,44 @@ export const makeSelectNewQuiz = () =>
         if (substate.newQuiz.values) {
           return substate.newQuiz.values;
         }
+      }
+    }
+  });
+
+export const makeSelectNewQuestion = () =>
+  createSelector(selectFormState, substate => {
+    console.log('makeSelectNewQuiz');
+    console.log(substate);
+    console.log(selectFormState);
+    if (substate) {
+      if (substate.newQuestion) {
+        if (substate.newQuestion.values) {
+          return substate.newQuestion.values;
+        }
+      }
+    }
+  });
+
+export const makeSelectQuizzes = () =>
+  createSelector(selectQuiz, substate => {
+    console.log('selectGlobalState');
+    console.log(substate);
+    console.log(selectQuiz);
+    if (substate) {
+        if (substate.quizzes) {
+          return substate.quizzes
+        }
+      
+    }
+  });
+
+  export const makeSelectQuiz = () =>
+  createSelector(selectQuiz, substate => {
+    console.log('substate');
+    console.log(substate);
+    if (substate) {
+      if (substate.selectedQuiz) {
+          return substate.selectedQuiz
       }
     }
   });

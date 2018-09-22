@@ -34,3 +34,24 @@ export const getQuizzesError = error => ({
   type: types.GET_QUIZZES_ERROR,
   error
 });
+// New Question
+
+export const postNewQuestionRequest = () => ({
+  type: types.POST_NEW_QUESTION_REQUEST,
+  payload: null
+});
+
+export const postNewQuestionSuccess = data => ({
+  type: types.POST_NEW_QUESTION_SUCCESS,
+  payload: data
+});
+
+export const postNewQuestionError = error => ({
+  type: types.POST_NEW_QUESTION_ERROR,
+  error
+});
+
+export const selectQuiz = data => ({
+  type: types.SELECT_QUIZ,
+  payload: data
+})

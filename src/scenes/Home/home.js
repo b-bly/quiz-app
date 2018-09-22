@@ -63,7 +63,12 @@ class QuizListItem extends Component {
   }
 
   render() {
+    let numberOfQuestions = 0
+    if (this.props.quiz.questions) {
+      numberOfQuestions = this.props.quiz.questions.length
+    }
     return (
+
       <QuizContainer
         onClick={this.loadQuiz.bind(this)}
         >
@@ -116,7 +121,7 @@ class Home extends Component {
       return (
         <Fragment>
           <Container>
-            <Title>It's good to be home</Title>
+            <Title>Quiz Wiz</Title>
             <Link to="/new-quiz" className="btn text-secondary">
               <span>New Quiz</span>
             </Link>

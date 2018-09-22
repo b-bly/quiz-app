@@ -39,6 +39,8 @@ const pool = require('../modules/pool.js');
 // }
 
 function createMultipleChoiceQuery(rows) {
+    console.log('rows', rows);
+    
     const values = []
     const columns = []
     let longestRowIndex = 0
@@ -79,7 +81,7 @@ function createMultipleChoiceQuery(rows) {
 // }
 
 router.post('/', (req, res) => {
-    const { name, type, questions } = req.body.data
+    const { name, type } = req.body.data
     const quizQuery = 'INSERT INTO quiz (name, type) VALUES ($1, $2) RETURNING quiz_id'
     const values = [name, type]
 
@@ -94,35 +96,51 @@ router.post('/', (req, res) => {
                     console.log('Error making quiz post query: ', err)
                     res.sendStatus(500);
                 } else {
-                    const { quiz_id } = result.rows[0]
-                    questions[0].quiz_id = quiz_id
-                    const questionQueryObj = createMultipleChoiceQuery(questions)
-
-                    pool.connect((err, client, done) => {
-                        if (err) {
-                            console.log('Error connecting to database', err)
-                            res.sendStatus(500)
-                        } else {
-                            client.query(questionQueryObj, (err, result) => {
-                                done();
-                                if (err) {
-                                    console.log('Error making quiz post query: ', err)
-                                    res.sendStatus(500);
-                                } else {
-                                    console.log(result)
-                                    res.send(result)
-                                }
-
-                            })
-                        }
-                    })
+                    console.log(result)
+                    res.send(result)
                 }
             })
         }
     })
 })
-//       client.query("INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id",
-// [saveUser.username, saveUser.password],
+
+// question sample req.body.data
+// { data: 
+//     { quiz_id: 11,
+//       name: 'cities',
+//       type: 'multiple choice',
+//       questions: [ [Object], [Object] ],
+//       question: { text: 'fdsa', correct_answer: 'a', a: 'fdsa' } } }
+
+router.post('/question', (req, res) => {
+   console.log('req.body');
+   console.log(req.body);
+   
+    const question = req.body.data
+    const questionArray = []
+    questionArray.push(question)
+    // createMultipleChoiceQuery accepts an array argument
+    const questionQueryObj = createMultipleChoiceQuery(questionArray)
+
+    // UPDATE books SET author=‘Sussanna Clarke’ WHERE id=2;
+    pool.connect((err, client, done) => {
+        if (err) {
+            console.log('Error connecting to database', err)
+            res.sendStatus(500)
+        } else {
+            client.query(questionQueryObj, (err, result) => {
+                done();
+                if (err) {
+                    console.log('Error making question post query: ', err)
+                    res.sendStatus(500);
+                } else {
+                    console.log(result)
+                    res.send(result)
+                }
+            })
+        }
+    })
+})
 
 router.get('/', (req, res) => {
     const query = 'SELECT * FROM quiz';

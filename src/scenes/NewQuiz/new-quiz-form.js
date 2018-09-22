@@ -111,110 +111,17 @@ const ButtonContainer = styled.div`
   text-align:right;
 `
 
-const MultipleChoiceAnswer = (props) => {
-  const { answerLetter, answerNumber, correctAnswer } = props
-  const name = answerLetter;
-  const isCorrect = name === correctAnswer;
-
-  return (
-    <Row>
-      <FormGroup>
-        {/* make this button a separate component */}
-        <Field
-          type="button"
-          name="correct_answer"
-          markCorrect={props.markCorrect}
-          answerLetter={answerLetter}
-          color={isCorrect ? colors.green : colors.gray200}
-          component={renderMarkCorrectField}
-        />
-        <FormContainer>
-          <FormLabel htmlFor={name} >{answerLetter}</FormLabel>
-        </FormContainer>
-        <FormContainer style={{ flex: '1' }}>
-          <Field
-            type="text"
-            name={name}
-            placeholder="Type the answer"
-            component={renderField}
-          />
-        </FormContainer>
-        {props.removeButton &&
-          <Button
-            color="orange"
-            type="button"
-            onClick={props.removeAnswer}
-          >-</Button>
-        }
-      </FormGroup>
-    </Row>
-
-  )
-}
 
 class NewQuizForm extends Component {
   constructor(props) {
     super(props)
-    this.numberOfAnswerBlanks = 1;
-    this.state = {
-      answerLetters: ['A', 'B', 'C', 'D'],
-      correctAnswer: '',
-    }
-    this.answerLettersMap = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-  }
-
-  addAnswerBlank() {
-    console.log('clicked');
-    this.numberOfAnswerBlanks++
-    const newLetter = this.answerLettersMap[this.numberOfAnswerBlanks - 1]
-    const answerLetterCopy = this.state.answerLetters.slice();
-    answerLetterCopy.push(newLetter)
-    this.setState({
-      answerLetters: answerLetterCopy
-    })
-
-    console.log(this.state.answerLetters)
-  }
-
-  removeAnswer() {
-    console.log('removeAnswer')
-    this.numberOfAnswerBlanks--
-    const answerLetterCopy = this.state.answerLetters.slice()
-    answerLetterCopy.pop()
-    this.setState({
-      answerLetters: answerLetterCopy
-    })
-  }
-
-  markCorrect(correctAnswer) {
-    console.log('markCorrect');
-    console.log(correctAnswer);
-    this.setState({
-      correctAnswer: correctAnswer
-    });
-
   }
 
   render() {
+    console.log('props');
+    console.log('this.props');
+    
     const { handleSubmit } = this.props
-
-    // let answerBlanks = this.answerLetters.map((letter, i) =>
-    //   <MultipleChoiceAnswer 
-    //     key={i.toString()}
-    //     answerLetter={letter}
-    //     answerNumber="1"
-    //   />
-    // )
-
-    //   CREATE TABLE quiz(
-    // 	id SERIAL PRIMARY KEY,
-    // 	name VARCHAR(80) NOT NULL,
-    // 	questions json
-    // );
-
-    // questions: [{ questionText: '', anwers: [{letter: '', correct: bool, text: ''}]}]
-
-
     return (
       <Form
         onSubmit={handleSubmit}
@@ -235,46 +142,7 @@ class NewQuizForm extends Component {
           </Column>
 
         </FormGroup>
-        <QuestionContainer>
-          <FormGroup>
-            <Column>
-              <FormLabel htmlFor="text">Question Text</FormLabel>
-            </Column>
-          </FormGroup>
-          <FormGroup>
-            <Column>
-              <Field
-                type="text"
-                name="text"
-                placeholder="Type your question"
-                component={renderTextArea}
-              />
-            </Column>
-          </FormGroup>
-
-
-          {this.state.answerLetters.map((letter, i) =>
-            <MultipleChoiceAnswer
-              key={i.toString()}
-              answerLetter={letter.toLowerCase()}
-              answerNumber="1"
-              removeButton={this.state.answerLetters.length === i + 1 &&
-                this.state.answerLetters.length > 1}
-              removeAnswer={this.removeAnswer.bind(this)}
-              correctAnswer={this.state.correctAnswer}
-              markCorrect={this.markCorrect.bind(this)}
-            />
-          )}
-
-
-          <ButtonContainer>
-            <Button
-              type="button"
-              onClick={this.addAnswerBlank.bind(this)}
-              color={colors.blue}
-            >+</Button>
-          </ButtonContainer>
-        </QuestionContainer>
+       
         <FormGroup>
           <Column></Column>
           <input

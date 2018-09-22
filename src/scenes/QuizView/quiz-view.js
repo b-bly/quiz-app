@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react'
-// import { Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 //REDUX
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 // Components
+
 //Style
 import styled from 'styled-components'
 import { colors } from '../Style/constants'
@@ -130,51 +131,82 @@ class QuizView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      quiz: null
+      quiz: null,
+      redirectTo: null,
     }
   }
   componentDidMount() {
     this.props.getQuizzesRequest();
   }
   // on mount, get quizzes if selected quiz not available
+  showAddNewQuestionForm() {
+    this.setState({
+      redirectTo: '/add-question'
+    })
+  }
   render() {
     const quiz_id = this.props.location.search.replace(/\?quiz_id=/, '')
     let quiz = null
     // if quiz is passed from home.js through redirect object
+    console.log('props: ');
+    
+    console.log(this.props);
     if (this.props.location.state) {
       quiz = this.props.location.state
-    } else {
+      console.log('*** quiz ***')
+      console.log(quiz)
+    } else if (this.props.selectedQuiz) {
+      quiz = this.props.selectedQuiz
+      console.log(quiz);
+    } else if (this.props.quizzes) {
       // Otherwise find the quiz from the redux state
       this.props.quizzes.forEach((quiz, i) => {
         if (quiz.quiz_id === quiz_id) {
           quiz = quiz
+          console.log('*** quiz ***')
+
+          console.log(quiz)
         }
       })
     }
-    return (
-      <Container>
-        <h1>{quiz.name}</h1>
-        <AddQuestionCard>
-          <CenteredColumn>
-            <p style={{ color: colors.gray700, margin: '10px 0' }}>Add a question</p>
-            <Button style={{ marginBottom: '10px' }}
-              aria-label="Add a question"
-              color={colors.blue}
-            >+
+    const redirectObj = {
+      pathname: '/add-question/?quiz_id=' + quiz.quiz_id,
+      state: quiz
+    }
+    if (this.state.redirectTo === '/add-question') {
+
+      return (
+        <Redirect
+        to={redirectObj}
+      />
+      )
+    } else {
+      return (
+        <Container>
+          <h1>{quiz.name}</h1>
+          <AddQuestionCard>
+            <CenteredColumn>
+              <p style={{ color: colors.gray700, margin: '10px 0' }}>Add a question</p>
+              <Button style={{ marginBottom: '10px' }}
+                aria-label="Add a question"
+                color={colors.blue}
+                onClick={this.showAddNewQuestionForm.bind(this)}
+              >+
               {/* <small style={{fontSize: '25px', fontSize: '25px', height: '15px', marginTop: '-20px'}}>
                 +
               </small> */}
-            </Button>
-          </CenteredColumn>
-        </AddQuestionCard>
-        {this.props.isLoading === false && (
-          <QuestionList
-            {...this.props}
-            selectedQuiz={quiz}
-          />)
-        }
-      </Container>
-    )
+              </Button>
+            </CenteredColumn>
+          </AddQuestionCard>
+          {this.props.isLoading === false && (
+            <QuestionList
+              {...this.props}
+              selectedQuiz={quiz}
+            />)
+          }
+        </Container>
+      )
+    }
   }
 }
 
