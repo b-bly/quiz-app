@@ -103,6 +103,13 @@ function quizReducer(state = INITIAL_STATE, action) {
         error: null,
       }
     }
+    case types.RESET_QUESTION_FORM: {
+      return {
+        ...state,
+        isLoading: true,
+        error: null,
+      }
+    }
     // Get quizzes
     case types.GET_QUIZZES_REQUEST: {
       return {

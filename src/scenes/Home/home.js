@@ -10,7 +10,7 @@ import { bindActionCreators } from 'redux';
 import '../NewQuiz/new-quiz.css'
 
 // Actions
-import { getQuizzesRequest } from '../ducks/actions';
+import { getQuizzesRequest, selectQuiz } from '../ducks/actions';
 const Container = styled.div`
   background-color: rgb(236, 236, 236);
   width: 100%;
@@ -61,7 +61,6 @@ class QuizListItem extends Component {
   loadQuiz() {
     this.props.loadQuiz(this.props.quiz)
   }
-
   render() {
     let numberOfQuestions = 0
     if (this.props.quiz.questions) {
@@ -91,6 +90,8 @@ class Home extends Component {
   }
 
   loadQuiz(quiz) {
+    this.props.selectQuiz(quiz)
+
     this.setState({
       redirectTo: {
         pathname: '/view_quiz/?quiz_id=' + quiz.quiz_id,
@@ -99,10 +100,31 @@ class Home extends Component {
     })
   }
 
+  getQuiz() {
+    let quiz = null;
+    if (this.props.quiz.selectedQuiz) {
+      quiz = this.props.quiz
+      if (this.props.location.state) {
+        quiz = this.props.location.state
+      }
+    }
+    return quiz
+  }
+
+  getQuizId() {
+    let quiz_id = null
+    if (this.props.quiz.selectedQuiz) {
+      quiz_id = this.props.quiz.selectedQuiz.quiz_id
+    } else if (this.props.location.search) {
+      quiz_id = this.props.location.search.replace(/\?quiz_id=/, '')
+    }
+    return quiz_id
+  }
+
+
   render() {
     console.log('******** props **********')
     console.log(this.props.quiz.quizzes)
-    console.log(typeof this.props.quiz.quizzes)
 
     const listItems = this.props.quiz.quizzes.map((quiz, i) =>
       <QuizListItem
@@ -111,6 +133,7 @@ class Home extends Component {
         quiz={quiz}
       />
     );
+
     if (this.state.redirectTo) {
       return (
       <Redirect
@@ -142,7 +165,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    getQuizzesRequest: getQuizzesRequest,
+    getQuizzesRequest,
+    selectQuiz,
   }, dispatch);
 }
 

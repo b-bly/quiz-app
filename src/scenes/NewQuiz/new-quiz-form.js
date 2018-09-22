@@ -91,6 +91,7 @@ const Button = styled.button`
   outline:0;
   text-decoration: none;
   width: ${props => props.minus ? '38px' : 'auto'};
+  cursor: pointer;
 
 &:hover, .btn:focus {
   text-decoration: none;

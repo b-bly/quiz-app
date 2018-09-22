@@ -26,8 +26,6 @@ class NewQuiz extends Component {
     super();
     this.state = {
       quizName: '',
-      redirectTo: null,
-      error: null,
       submitClicked: null,
     };
   }

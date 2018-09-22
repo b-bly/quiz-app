@@ -9,9 +9,27 @@ import { bindActionCreators } from 'redux';
 import styled from 'styled-components'
 import { colors } from '../Style/constants'
 // Actions
-import { getQuizzesRequest } from '../ducks/actions';
+import { getQuizzesRequest, selectQuiz } from '../ducks/actions';
 
 // import { postNewQuizRequest, resetQuiz } from '../ducks/actions';
+
+const NavBar = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  // height: 20px;
+  flex-direction: row;
+  background-color: rgba(0, 0, 0, .7);
+  `
+const NavBarLink = styled.div`
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    opacity: .8;
+    background-color:rgba(0, 0, 0, .6);
+  }`
 
 const Container = styled.div`
   background-color: rgb(236, 236, 236);
@@ -80,6 +98,7 @@ const Button = styled.button`
   outline:0;
   text-decoration: none;
   width: 50px;
+  cursor: pointer;
 
 &:hover, .btn:focus {
   text-decoration: none;
@@ -94,28 +113,35 @@ const Button = styled.button`
 class QuestionList extends Component {
   constructor() {
     super()
-
+    this.state = {
+      redirectTo: null
+    }
   }
   render() {
     console.log('this.props.location')
     console.log(this.props.location)
     console.log('quiz.questions');
     console.log(this.props.selectedQuiz.questions)
-    let questions = this.props.selectedQuiz.questions.length < 1 ? null : this.props.selectedQuiz.questions.map((question, i) =>
-      <QuestionContainer key={i.toString()}>
-        <CenteredContainer>
-          <h1 style={{ color: colors.gray700 }}>{i + 1}</h1>
-        </CenteredContainer>
-        <CenteredContainer>
-          <p style={{ color: colors.gray700 }}>{question.text}</p>
-        </CenteredContainer>
-      </QuestionContainer>
-    )
+    let questions = null
+    if (this.props.selectedQuiz) {
+      if (this.props.selectedQuiz.questions) {
+        questions = this.props.selectedQuiz.questions.length < 1 ? null : this.props.selectedQuiz.questions.map((question, i) =>
+          <QuestionContainer key={i.toString()}>
+            <CenteredContainer>
+              <h1 style={{ color: colors.gray700 }}>{i + 1}</h1>
+            </CenteredContainer>
+            <CenteredContainer>
+              <p style={{ color: colors.gray700 }}>{question.text}</p>
+            </CenteredContainer>
+          </QuestionContainer>
+        )
+      }
+    }
     console.log('questions:');
     console.log(questions);
     return (
       <Fragment>
-        {this.props.selectedQuiz.questions.length > 0 ?
+        {questions ?
           <Fragment>
             {questions}
           </Fragment>
@@ -140,49 +166,71 @@ class QuizView extends Component {
   }
   // on mount, get quizzes if selected quiz not available
   showAddNewQuestionForm() {
-    this.setState({
-      redirectTo: '/add-question'
-    })
-  }
-  render() {
-    const quiz_id = this.props.location.search.replace(/\?quiz_id=/, '')
-    let quiz = null
-    // if quiz is passed from home.js through redirect object
-    console.log('props: ');
-    
-    console.log(this.props);
-    if (this.props.location.state) {
-      quiz = this.props.location.state
-      console.log('*** quiz ***')
-      console.log(quiz)
-    } else if (this.props.selectedQuiz) {
-      quiz = this.props.selectedQuiz
-      console.log(quiz);
-    } else if (this.props.quizzes) {
-      // Otherwise find the quiz from the redux state
-      this.props.quizzes.forEach((quiz, i) => {
-        if (quiz.quiz_id === quiz_id) {
-          quiz = quiz
-          console.log('*** quiz ***')
-
-          console.log(quiz)
-        }
-      })
-    }
+    const quiz = this.getQuiz()
+    const quiz_id = this.getQuizId()
     const redirectObj = {
       pathname: '/add-question/?quiz_id=' + quiz.quiz_id,
       state: quiz
     }
-    if (this.state.redirectTo === '/add-question') {
+    this.setState({
+      redirectTo: redirectObj
+    })
+  }
 
+  redirectHome() {
+    console.log('redirecting home');
+
+
+    this.setState({
+      redirectTo: { pathname: '/' }
+    }, function () {
+      // this.props.selectQuiz({})
+    })
+  }
+
+  getQuiz() {
+    let quiz = null;
+    if (this.props.selectedQuiz) {
+      if (this.props.selectedQuiz.questions) {
+        quiz = this.props.selectedQuiz
+      }
+    } else if (this.props.location.state) {
+      quiz = this.props.location.state
+    }
+    return quiz
+  }
+
+  getQuizId() {
+    let quiz_id = null
+    if (this.props.selectedQuiz) {
+      quiz_id = this.props.selectedQuiz.quiz_id
+    } else if (this.props.location.search) {
+      quiz_id = this.props.location.search.replace(/\?quiz_id=/, '')
+    }
+    return quiz_id
+  }
+
+  render() {
+    const quiz_id = this.getQuizId();
+    let quiz = this.getQuiz()
+    console.log('***** quiz ******')
+    console.log(quiz)
+    // if quiz is passed from home.js through redirect object
+
+    if (this.state.redirectTo) {
       return (
-        <Redirect
-        to={redirectObj}
-      />
+        <Redirect to={this.state.redirectTo} />
       )
-    } else {
+    } else if (quiz) {
       return (
+
         <Container>
+          <NavBar>
+            <NavBarLink
+              onClick={this.redirectHome.bind(this)}
+            >Quizzes</NavBarLink>
+            <div></div>
+          </NavBar>
           <h1>{quiz.name}</h1>
           <AddQuestionCard>
             <CenteredColumn>
@@ -206,6 +254,8 @@ class QuizView extends Component {
           }
         </Container>
       )
+    } else {
+      return (null)
     }
   }
 }
@@ -218,7 +268,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    getQuizzesRequest
+    getQuizzesRequest,
+    selectQuiz,
 
   }, dispatch);
 }

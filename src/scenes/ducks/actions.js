@@ -55,3 +55,7 @@ export const selectQuiz = data => ({
   type: types.SELECT_QUIZ,
   payload: data
 })
+
+export const resetQuestionForm = () => ({
+  type: types.RESET_QUESTION_FORM
+})
