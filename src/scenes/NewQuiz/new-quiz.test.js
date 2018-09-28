@@ -10,25 +10,28 @@ import '../../test/helpers';
 // expect(wrapper.find('.clicks-1').length).to.equal(1);
 
 describe("NewQuiz", () => {
-  const wrapper = shallow(<NewQuiz />)
+  const store = configureStore();
+  const wrapper = shallow(<NewQuiz store={store} />)
 
   it("always renders a div", () => {
     const divs = wrapper.find("div");
     expect(divs.length).toBeGreaterThan(0);
   });
-  describe("handleChange", () => {
-    it("should update state onChange", () => {
-    const event = {
-      target: {
-        value: 'a',
-        name: 'quizName'
-      }
-    }
-    wrapper.find('.quiz-name').simulate('change', event) 
-    console.log(wrapper.state())   
-    expect(wrapper.state().quizName).toEqual(event.target.value)
-    })
-  })
+  // rewrite for redux forms
+  // describe("handleChange", () => {
+  //   it("should update state onChange", () => {
+  //   const event = {
+  //     target: {
+  //       value: 'a',
+  //       name: 'quizName'
+  //     }
+  //   }
+  //   wrapper.find('.quiz-name').simulate('change', event) 
+  //   console.log(wrapper.state())   
+  //   expect(wrapper.state().quizName).toEqual(event.target.value)
+  //   })
+  // })
+
   // describe("handleSubmit", () => {
   //   it("should be called on click of submit button", () => {
   //     const wrapper = shallow(<NewQuiz />)
@@ -41,13 +44,13 @@ describe("NewQuiz", () => {
   // })
   describe("handleSubmit", () => {
     it("should be called on click of submit button", () => {
-      const wrapper = shallow(<NewQuiz />)
+      // const wrapper = shallow(<NewQuiz store/>)
       const instance = wrapper.instance();
-      let handleSubmitStub = sinon.stub(instance, 'handleSubmit').callsFake(() => { });
+      let submitStub = sinon.stub(instance, 'submit').callsFake(() => { });
       instance.forceUpdate();
       wrapper.update();
       wrapper.find('form').simulate('submit');
-      expect(handleSubmitStub.callCount).toEqual(1)
+      expect(submitStub.callCount).toEqual(1)
     })
   })
 })

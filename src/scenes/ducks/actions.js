@@ -59,3 +59,18 @@ export const selectQuiz = data => ({
 export const resetQuestionForm = () => ({
   type: types.RESET_QUESTION_FORM
 })
+
+export const deleteQuizRequest = (quiz_id) => ({
+  type: types.DELETE_QUIZ_REQUEST,
+  payload: quiz_id
+});
+
+export const deleteQuizSuccess = data => ({
+  type: types.DELETE_QUIZ_SUCCESS,
+  payload: data
+});
+
+export const deleteQuizError = error => ({
+  type: types.DELETE_QUIZ_ERROR,
+  error
+});

@@ -131,10 +131,34 @@ function quizReducer(state = INITIAL_STATE, action) {
       }
     }
     case types.SELECT_QUIZ: {
-      console.log('select quiz reducer:', action.payload)
       return {
         ...state,
         selectedQuiz: action.payload
+      }
+    }
+    case types.DELETE_QUIZ_REQUEST: {
+      return {
+        ...state,
+      }
+    }
+    case types.DELETE_QUIZ_SUCCESS: {
+      return {
+        ...state,
+        quizzes: [
+          ...Object.assign([], state.quizzes).filter((quiz, i) => {
+            if (action.payload.quiz_id === quiz.quiz_id) {
+              return false;
+            } else {
+              return true;
+            }
+          })
+        ],
+      }
+    }
+    case types.DELETE_QUIZ_ERROR: {
+      return {
+        ...state,
+        error: action.error
       }
     }
     default: {

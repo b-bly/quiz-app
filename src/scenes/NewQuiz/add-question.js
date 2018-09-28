@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 // Components
 import AddQuestionForm from './add-question-form';
 //Style
-import './new-quiz.css'
 import styled from 'styled-components'
 // Actions
 import { selectQuiz, resetQuestionForm, postNewQuestionRequest, getQuizzesError } from '../ducks/actions'

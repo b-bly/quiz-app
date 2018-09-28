@@ -38,47 +38,6 @@ const pool = require('../modules/pool.js');
 //   ]
 // }
 
-function createMultipleChoiceQuery(rows) {
-    console.log('rows', rows);
-    
-    const values = []
-    const columns = []
-    let longestRowIndex = 0
-    let longestRowLength = rows[0]
-    // get row most columns (more answer choices) > this will be the property list
-    rows.forEach((row, i) => { // each row is one question object
-        const rowLength = Object.keys(row).length
-        if (rowLength > longestRowLength) {
-            longestRowLength = rowLength
-            longestRowIndex = i
-        }
-    })
-    const longestRow = rows[longestRowIndex]
-    const propertyList = '(' + Object.keys(longestRow).join(', ') + ')'
-    rows.forEach((row, i) => { // each row is one question object
-
-        const valueClause = [] // $1, $2
-        Object.keys(longestRow).forEach((property, j) => { // the property of the question object: text, correct_answer...
-            if (j < Object.keys(row).length) {
-                values.push(row[property])
-            } else {
-                // fill in extra spots will ''
-                values.push('')
-            }
-            valueClause.push('$' + values.length) // [($1, $2...), ($3, $4, ...)] for each question
-        })
-        columns.push('(' + valueClause.join(', ') + ')')
-    })
-    return {
-        text: 'INSERT INTO multiple_choice_questions ' + propertyList + ' VALUES ' + columns.join(', '),
-        values: values
-    }
-}
-// Query object format: 
-// {
-//     text: 'INSERT INTO multiple_choice_questions (name, type) VALUES ($1, $2, $3, $4, $5, $6), ($3, $4...)'
-//     values: ['How old are you?', '10 years old', '1 years old', '4 years old', '8 years old', '2 years old'...]
-// }
 
 router.post('/', (req, res) => {
     const { name, type } = req.body.data
@@ -113,9 +72,9 @@ router.post('/', (req, res) => {
 //       question: { text: 'fdsa', correct_answer: 'a', a: 'fdsa' } } }
 
 router.post('/question', (req, res) => {
-   console.log('req.body');
-   console.log(req.body);
-   
+    console.log('req.body');
+    console.log(req.body);
+
     const question = req.body.data
     const questionArray = []
     questionArray.push(question)
@@ -222,5 +181,71 @@ router.get('/', (req, res) => {
     })
 })
 
+router.delete('/', (req, res) => {
+    const { quiz_id } = req.query;
+    // console.log(req.query);
+    const deleteQuery = 'DELETE from quiz WHERE quiz_id=' + quiz_id + ';'
+
+    pool.connect((err, client, done) => {
+        if (err) {
+            console.log('Error connecting to database', err)
+            res.sendStatus(500)
+        } else {
+            client.query(deleteQuery, (err, result) => {
+                done();
+                if (err) {
+                    console.log('Error making delete quiz query: ', err)
+                    res.sendStatus(500);
+                } else {
+                    console.log(result)
+                    res.send(result)
+                }
+            })
+        }
+    })
+})
+
+
+function createMultipleChoiceQuery(rows) {
+    console.log('rows', rows);
+
+    const values = []
+    const columns = []
+    let longestRowIndex = 0
+    let longestRowLength = rows[0]
+    // get row most columns (more answer choices) > this will be the property list
+    rows.forEach((row, i) => { // each row is one question object
+        const rowLength = Object.keys(row).length
+        if (rowLength > longestRowLength) {
+            longestRowLength = rowLength
+            longestRowIndex = i
+        }
+    })
+    const longestRow = rows[longestRowIndex]
+    const propertyList = '(' + Object.keys(longestRow).join(', ') + ')'
+    rows.forEach((row, i) => { // each row is one question object
+
+        const valueClause = [] // $1, $2
+        Object.keys(longestRow).forEach((property, j) => { // the property of the question object: text, correct_answer...
+            if (j < Object.keys(row).length) {
+                values.push(row[property])
+            } else {
+                // fill in extra spots will ''
+                values.push('')
+            }
+            valueClause.push('$' + values.length) // [($1, $2...), ($3, $4, ...)] for each question
+        })
+        columns.push('(' + valueClause.join(', ') + ')')
+    })
+    return {
+        text: 'INSERT INTO multiple_choice_questions ' + propertyList + ' VALUES ' + columns.join(', '),
+        values: values
+    }
+}
+// Query object format: 
+// {
+//     text: 'INSERT INTO multiple_choice_questions (name, type) VALUES ($1, $2, $3, $4, $5, $6), ($3, $4...)'
+//     values: ['How old are you?', '10 years old', '1 years old', '4 years old', '8 years old', '2 years old'...]
+// }
 
 module.exports = router;

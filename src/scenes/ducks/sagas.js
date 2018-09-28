@@ -12,10 +12,12 @@ import {
   getQuizzesError,
   postNewQuestionSuccess,
   postNewQuestionError,
+  deleteQuizSuccess,
+  deleteQuizError,
 } from './actions';
 
 // Selectors
-import { makeSelectNewQuiz, makeSelectNewQuestion, makeSelectQuizzes, makeSelectQuiz } from './selectors';
+import { makeSelectNewQuiz, makeSelectNewQuestion, makeSelectQuiz } from './selectors';
 
 // async data
 const postNewQuizAsync = (data) => {
@@ -32,6 +34,12 @@ const postNewQuestionAsync = (data) => {
 
 const getQuizzesAsync = () => {
   return axios.get('/quiz');
+}
+
+const deleteQuizAsync = (data) => {
+  return axios.delete('/quiz/', {
+    params: data,
+  })
 }
 
 //Saga
@@ -148,10 +156,25 @@ function* getQuizzes() {
   }
 }
 
+function* deleteQuiz(action) {
+  try {
+    // to do use selectors to get data
+    console.log('*** action.payload ***')
+    console.log(action.payload);
+    const data = { quiz_id: action.payload };
+    yield call(deleteQuizAsync, data);
+    yield put(deleteQuizSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(deleteQuizError({ ...error }));
+  }
+}
+
 function* quizSaga() {
   yield takeLatest(types.POST_NEW_QUIZ_REQUEST, postNewQuiz);
   yield takeLatest(types.GET_QUIZZES_REQUEST, getQuizzes);
   yield takeLatest(types.POST_NEW_QUESTION_REQUEST, postNewQuestion);
+  yield takeLatest(types.DELETE_QUIZ_REQUEST, deleteQuiz)
 }
 
 export default quizSaga;
