@@ -235,7 +235,7 @@ class QuizView extends Component {
   editQuiz(quiz) {
     console.log(quiz);
     const redirectObj = {
-      pathname: '/new-quiz/?quiz_id=' + quiz.quiz_id,
+      pathname: '/edit-quiz/?quiz_id=' + quiz.quiz_id,
       state: quiz
     }
     this.setState({

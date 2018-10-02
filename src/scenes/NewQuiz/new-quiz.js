@@ -9,7 +9,7 @@ import NewQuizForm from './new-quiz-form';
 // import './new-quiz.css'
 import styled from 'styled-components'
 // Actions
-import { postNewQuizRequest, resetQuiz } from '../ducks/actions';
+import { postNewQuizRequest, resetQuiz, updateQuizRequest } from '../ducks/actions';
 
 const Container = styled.div`
   background-color: rgb(236, 236, 236);
@@ -21,11 +21,24 @@ const Container = styled.div`
   flex-direction: column;
 `
 
+const NewQuizFormWrapper = (props) => {
+  const submitEdit = () => {
+    props.submitEdit(props.quiz.quiz_id)
+  }
+  const initialValue = {
+    name: props.quiz.name
+  }
+  return (
+    <NewQuizForm onSubmit={submitEdit}
+      initialValues={initialValue}
+      editMode="true" />
+  )
+}
+
 class NewQuiz extends Component {
   constructor() {
     super();
     this.state = {
-      quizName: '',
       submitClicked: null,
     };
   }
@@ -46,9 +59,16 @@ class NewQuiz extends Component {
     return quiz
   }
 
-  submit = () => {
+  submitNew = () => {
     console.log('new quiz form submit: ')
     this.props.postNewQuizRequest();
+    this.setState({
+      submitClicked: true
+    })
+  }
+
+  submitEdit = (quiz_id) => {
+    this.props.updateQuizRequest(quiz_id);
     this.setState({
       submitClicked: true
     })
@@ -58,9 +78,10 @@ class NewQuiz extends Component {
     const quiz = this.getQuiz()
     // https://redux-form.com/7.0.2/examples/initializefromstate/
     console.log('quiz', quiz)
-    const initialValue = {
-      quizName: quiz.name
-    }
+    // let initialValue = null;
+    // if (quiz) {
+    // }
+    const editMode = this.props.location.pathname.search(/edit/) !== -1;
 
     if (this.props.quiz.isLoading === false &&
       this.props.quiz.error === null &&
@@ -73,14 +94,15 @@ class NewQuiz extends Component {
           {this.props.quiz.error !== null &&
             <p>There was an error submitting your quiz.  Please try again.</p>
           }
-          {quiz ?
+          {editMode ?
             (
-              <NewQuizForm onSubmit={this.submit.bind(this)} 
-              initialValues={initialValue}/>
+              <NewQuizFormWrapper submitEdit={this.submitEdit.bind(this)}
+                quiz={quiz}/>
             )
             :
             (
-              <NewQuizForm onSubmit={this.submit.bind(this)} />
+              <NewQuizForm
+                onSubmit={this.submitNew.bind(this)} />
             )
           }
         </Container>
@@ -101,6 +123,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     postNewQuizRequest: postNewQuizRequest,
     resetQuiz: resetQuiz,
+    updateQuizRequest,
   }, dispatch);
 }
 

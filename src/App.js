@@ -26,6 +26,10 @@ class App extends Component {
           component={Home}
         />
         <Route
+          path="/edit-quiz"
+          component={NewQuiz}
+        />
+        <Route
           path="/new-quiz"
           component={NewQuiz}
         />

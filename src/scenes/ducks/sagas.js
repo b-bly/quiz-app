@@ -14,6 +14,8 @@ import {
   postNewQuestionError,
   deleteQuizSuccess,
   deleteQuizError,
+  updateQuizSuccess,
+  updateQuizError,
 } from './actions';
 
 // Selectors
@@ -39,6 +41,12 @@ const getQuizzesAsync = () => {
 const deleteQuizAsync = (data) => {
   return axios.delete('/quiz/', {
     params: data,
+  })
+}
+
+const updateQuizAsync = (data) => {
+  return axios.put('/quiz', {
+    data,
   })
 }
 
@@ -73,7 +81,7 @@ function* postNewQuiz(action) {
     // }
 
     const formattedData = {
-      name: data.quizName,
+      name: data.name,
       type: 'multiple choice'
     }
     console.log('formatted data')
@@ -170,11 +178,28 @@ function* deleteQuiz(action) {
   }
 }
 
+function* updateQuiz(action) {
+  try {
+    const quizName = yield select(makeSelectNewQuiz());
+    const data = {
+      name: quizName.name,
+      quiz_id: action.payload,
+    }
+    console.log('*** data ***')
+    console.log(data);
+    yield call(updateQuizAsync, data)
+    yield put(updateQuizSuccess(data))
+  } catch (error) {
+    yield put(updateQuizError({ ...error }))
+  }
+}
+
 function* quizSaga() {
   yield takeLatest(types.POST_NEW_QUIZ_REQUEST, postNewQuiz);
   yield takeLatest(types.GET_QUIZZES_REQUEST, getQuizzes);
   yield takeLatest(types.POST_NEW_QUESTION_REQUEST, postNewQuestion);
   yield takeLatest(types.DELETE_QUIZ_REQUEST, deleteQuiz)
+  yield takeLatest(types.UPDATE_QUIZ_REQUEST, updateQuiz)
 }
 
 export default quizSaga;

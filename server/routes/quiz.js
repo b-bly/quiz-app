@@ -205,6 +205,33 @@ router.delete('/', (req, res) => {
     })
 })
 
+router.put('/', (req, res) => {
+    const { name, quiz_id } = req.body.data
+    console.log('req.body.data: ')
+    console.log(req.body.data);
+    
+    const quizQuery = `UPDATE quiz SET name=($1) WHERE quiz_id=($2)`
+    const values = [name, quiz_id]
+    // client.query('UPDATE items SET text=($1), complete=($2) WHERE id=($3)',
+    // [data.text, data.complete, id]);
+    pool.connect((err, client, done) => {
+        if (err) {
+            console.log('Error connecting to database', err)
+            res.sendStatus(500)
+        } else {
+            client.query(quizQuery, values, (err, result) => {
+                done();
+                if (err) {
+                    console.log('Error making quiz update query: ', err)
+                    res.sendStatus(500);
+                } else {
+                    console.log(result)
+                    res.send(result)
+                }
+            })
+        }
+    })
+})
 
 function createMultipleChoiceQuery(rows) {
     console.log('rows', rows);

@@ -49,7 +49,6 @@ class AddQuestion extends Component {
   constructor() {
     super();
     this.state = {
-      quizName: '',
       submitClicked: null,
     };
   }

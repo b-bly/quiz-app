@@ -128,14 +128,14 @@ class NewQuizForm extends Component {
         onSubmit={handleSubmit}>
         <FormGroup>
           <Column>
-            <FormLabel htmlFor="quizName">Quiz name</FormLabel>
+            <FormLabel htmlFor="name">Quiz name</FormLabel>
           </Column>
 
           <Column>
             <Field
               type="text"
-              id="quizName"
-              name="quizName"
+              id="name"
+              name="name"
               placeholder="Quiz name"
               component={renderField}
             />

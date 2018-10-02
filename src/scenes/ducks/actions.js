@@ -20,9 +20,9 @@ export const resetQuiz = () => ({
 });
 
 // getQuizzes
-export const getQuizzesRequest = data => ({
+export const getQuizzesRequest = () => ({
   type: types.GET_QUIZZES_REQUEST,
-  payload: data
+  payload: null
 });
 
 export const getQuizzesSuccess = data => ({
@@ -72,5 +72,20 @@ export const deleteQuizSuccess = data => ({
 
 export const deleteQuizError = error => ({
   type: types.DELETE_QUIZ_ERROR,
+  error
+});
+
+export const updateQuizRequest = (quiz_id) => ({
+  type: types.UPDATE_QUIZ_REQUEST,
+  payload: quiz_id
+});
+
+export const updateQuizSuccess = data => ({
+  type: types.UPDATE_QUIZ_SUCCESS,
+  payload: data
+});
+
+export const updateQuizError = error => ({
+  type: types.UPDATE_QUIZ_ERROR,
   error
 });
