@@ -34,6 +34,18 @@ class NewQuiz extends Component {
     if (this.props.quiz.isLoading === false) this.props.resetQuiz();
   }
 
+  getQuiz() {
+    let quiz = null;
+    if (this.props.selectedQuiz) {
+      if (this.props.selectedQuiz.questions) {
+        quiz = this.props.selectedQuiz
+      }
+    } else if (this.props.location.state) {
+      quiz = this.props.location.state
+    }
+    return quiz
+  }
+
   submit = () => {
     console.log('new quiz form submit: ')
     this.props.postNewQuizRequest();
@@ -43,7 +55,14 @@ class NewQuiz extends Component {
   }
 
   render() {
-    if (this.props.quiz.isLoading === false && 
+    const quiz = this.getQuiz()
+    // https://redux-form.com/7.0.2/examples/initializefromstate/
+    console.log('quiz', quiz)
+    const initialValue = {
+      quizName: quiz.name
+    }
+
+    if (this.props.quiz.isLoading === false &&
       this.props.quiz.error === null &&
       this.state.submitClicked) {
       return <Redirect to={{ pathname: '/' }} />
@@ -54,8 +73,19 @@ class NewQuiz extends Component {
           {this.props.quiz.error !== null &&
             <p>There was an error submitting your quiz.  Please try again.</p>
           }
-          <NewQuizForm onSubmit={this.submit.bind(this)} />
+          {quiz ?
+            (
+              <NewQuizForm onSubmit={this.submit.bind(this)} 
+              initialValues={initialValue}/>
+            )
+            :
+            (
+              <NewQuizForm onSubmit={this.submit.bind(this)} />
+            )
+          }
         </Container>
+
+
       )
     }
   }

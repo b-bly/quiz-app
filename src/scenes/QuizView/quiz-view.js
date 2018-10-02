@@ -8,10 +8,10 @@ import { bindActionCreators } from 'redux';
 //Style
 import styled from 'styled-components'
 import { colors } from '../Style/constants'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 // Actions
 import { getQuizzesRequest, selectQuiz } from '../ducks/actions';
-
-// import { postNewQuizRequest, resetQuiz } from '../ducks/actions';
 
 const NavBar = styled.div`
   width: 100%;
@@ -109,6 +109,28 @@ const Button = styled.button`
   outline: 0;
 }
 `
+
+const QuizButton = styled(FontAwesomeIcon)`
+  color: ${props => props.color};
+  margin: 'auto .5em';
+  margin: 0 .5em;
+  cursor: pointer;`
+
+const Row = styled.div`
+  display: inline-block;`
+
+const EditQuiz = (props) => {
+  const editQuiz = () => {
+    props.editQuiz(props.quiz);
+  }
+  return (
+    <QuizButton icon="edit"
+    color="gray"
+    onClick={editQuiz.bind(this)}
+    style={{ display: 'inline-block' }}>
+  </QuizButton>
+  )
+}
 
 class QuestionList extends Component {
   constructor() {
@@ -210,6 +232,17 @@ class QuizView extends Component {
     return quiz_id
   }
 
+  editQuiz(quiz) {
+    console.log(quiz);
+    const redirectObj = {
+      pathname: '/new-quiz/?quiz_id=' + quiz.quiz_id,
+      state: quiz
+    }
+    this.setState({
+      redirectTo: redirectObj
+    })
+  }
+
   render() {
     const quiz_id = this.getQuizId();
     let quiz = this.getQuiz()
@@ -231,7 +264,15 @@ class QuizView extends Component {
             >Quizzes</NavBarLink>
             <div></div>
           </NavBar>
-          <h1>{quiz.name}</h1>
+          <Row>
+            <h1 style={{ display: 'inline-block' }}>{quiz.name}</h1>
+
+            <EditQuiz
+              quiz={quiz}
+              editQuiz={this.editQuiz.bind(this)}>
+            </EditQuiz>
+
+          </Row>
           <AddQuestionCard>
             <CenteredColumn>
               <p style={{ color: colors.gray700, margin: '10px 0' }}>Add a question</p>

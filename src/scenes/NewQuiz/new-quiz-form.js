@@ -125,8 +125,7 @@ class NewQuizForm extends Component {
     const { handleSubmit } = this.props
     return (
       <Form
-        onSubmit={handleSubmit}
-      >
+        onSubmit={handleSubmit}>
         <FormGroup>
           <Column>
             <FormLabel htmlFor="quizName">Quiz name</FormLabel>
@@ -141,7 +140,6 @@ class NewQuizForm extends Component {
               component={renderField}
             />
           </Column>
-
         </FormGroup>
        
         <FormGroup>
