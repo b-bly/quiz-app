@@ -71,7 +71,7 @@ class AddQuestion extends Component {
     const quiz_id = this.getQuizId();
     this.setState({
       redirectTo: {
-        pathname: '/view_quiz/?quiz_id=' + quiz_id,
+        pathname: '/view-quiz/?quiz_id=' + quiz_id,
         state: quiz
       }
     })
@@ -105,7 +105,7 @@ class AddQuestion extends Component {
     const quiz_id = this.getQuizId()
 
     const quizViewRedirectObj = {
-      pathname: '/view_quiz/?quiz_id=' + quiz_id,
+      pathname: '/view-quiz/?quiz_id=' + quiz_id,
       state: quiz
     }
     console.log('this.props', this.props)

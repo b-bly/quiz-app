@@ -125,7 +125,7 @@ const EditQuiz = (props) => {
   }
   return (
     <QuizButton icon="edit"
-    color="gray"
+    color={colors.blue}
     onClick={editQuiz.bind(this)}
     style={{ display: 'inline-block' }}>
   </QuizButton>
@@ -269,7 +269,8 @@ class QuizView extends Component {
 
             <EditQuiz
               quiz={quiz}
-              editQuiz={this.editQuiz.bind(this)}>
+              editQuiz={this.editQuiz.bind(this)}
+              >
             </EditQuiz>
 
           </Row>

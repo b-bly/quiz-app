@@ -38,7 +38,7 @@ const QuizContainer = styled.div`
 const Column = styled.div`
   display: flex;
   flex-flow: column nowrap;
-  align-items: flex-end;
+  align-items: flex-start;
   flex: 1 1 auto;`
 
 const RightContainer = styled.div`
@@ -63,7 +63,11 @@ const Title = styled.div`
 const QuizButton = styled(FontAwesomeIcon)`
   color: ${props => props.color};
   margin: 'auto .5em';
-  margin: 0 .5em;`
+  margin: 0 .5em;
+  &:hover, .btn:focus {
+    text-decoration: none;
+    opacity: .75;
+  }`
 
 const Button = styled(Link)`
   background-color: ${props => props.color};
@@ -110,6 +114,9 @@ const Button = styled(Link)`
 class QuizListItem extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      redirectTo: null,
+    }
   }
 
   loadQuiz() {
@@ -117,32 +124,52 @@ class QuizListItem extends Component {
   }
 
   deleteQuiz(e) {
-    console.log('delete quiz clicked');
     e.stopPropagation();
     this.props.deleteQuiz(this.props.quiz.quiz_id);
   }
 
+  editQuiz(e) {
+    e.stopPropagation();
+    const redirectObject = {
+      pathname: '/view-quiz/?quiz_id=' + this.props.quiz_id,
+      state: this.props.quiz
+    }
+    this.setState({
+      redirectTo: redirectObject,
+    })
+  }
+
   render() {
-    return (
 
-      <QuizContainer
-        onClick={this.loadQuiz.bind(this)}>
-        <Column>
-          <Name>Quiz: {this.props.quiz.name}</Name>
-          <Questions>Questions: {this.props.quiz.questions.length}</Questions>
-        </Column>
-        <RightContainer>
-          <QuizButton icon="trash"
-            color="gray"
-            onClick={this.deleteQuiz.bind(this)}>
-          </QuizButton>
-          <QuizButton icon="edit"
-            color="gray">
-          </QuizButton>
-        </RightContainer>
+    if (this.state.redirectTo) {
+      return (
+        <Redirect
+          to={this.state.redirectTo}
+        />
+      )
+    } else {
+      return (
 
-      </QuizContainer>
-    )
+        <QuizContainer
+          onClick={this.loadQuiz.bind(this)}>
+          <Column>
+            <Name>Quiz: {this.props.quiz.name}</Name>
+            <Questions>Questions: {this.props.quiz.questions.length}</Questions>
+          </Column>
+          <RightContainer>
+            <QuizButton icon="trash"
+              color={colors.red}
+              onClick={this.deleteQuiz.bind(this)}>
+            </QuizButton>
+            <QuizButton icon="edit"
+              color={colors.blue}
+              onClick={this.editQuiz.bind(this)}>
+            </QuizButton>
+          </RightContainer>
+
+        </QuizContainer>
+      )
+    }
   }
 }
 
@@ -162,7 +189,7 @@ class Home extends Component {
 
     this.setState({
       redirectTo: {
-        pathname: '/view_quiz/?quiz_id=' + quiz.quiz_id,
+        pathname: '/view-quiz/?quiz_id=' + quiz.quiz_id,
         state: quiz
       }
     })

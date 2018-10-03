@@ -34,7 +34,7 @@ class App extends Component {
           component={NewQuiz}
         />
         <Route
-          path="/view_quiz"
+          path="/view-quiz"
           component={QuizView}
         />
         <Route

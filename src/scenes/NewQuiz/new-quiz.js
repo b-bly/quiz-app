@@ -21,6 +21,43 @@ const Container = styled.div`
   flex-direction: column;
 `
 
+const NavBarContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  // height: 20px;
+  flex-direction: row;
+  background-color: rgba(0, 0, 0, .7);
+  `
+
+const NavBarItem = styled.div`
+  color: white;
+  padding: 10px;`
+
+const CloseX = styled.div`
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    opacity: .8;
+    background-color:rgba(0, 0, 0, .6);
+  }`
+
+const NavBar = (props) => {
+  const redirectQuizView = () => {
+    props.redirectQuizView(props.quiz)
+  }
+  return (
+    <NavBarContainer>
+      <NavBarItem></NavBarItem>
+      <NavBarItem>New Question</NavBarItem>
+      <CloseX onClick={redirectQuizView}
+      >&#x2716;</CloseX>
+    </NavBarContainer>
+  )
+}
+
 const NewQuizFormWrapper = (props) => {
   const submitEdit = () => {
     props.submitEdit(props.quiz.quiz_id)
@@ -74,6 +111,16 @@ class NewQuiz extends Component {
     })
   }
 
+  redirectQuizView = (quiz) => {
+    this.setState({
+      redirectTo: {
+        pathname: '/view-quiz/?quiz_id=' + quiz.quiz_id,
+        state: quiz
+      }
+    })
+  }
+
+
   render() {
     const quiz = this.getQuiz()
     // https://redux-form.com/7.0.2/examples/initializefromstate/
@@ -87,9 +134,15 @@ class NewQuiz extends Component {
       this.props.quiz.error === null &&
       this.state.submitClicked) {
       return <Redirect to={{ pathname: '/' }} />
+    } else if (this.state.redirectTo) {
+      return <Redirect to={this.state.redirectTo} />
     } else {
       return (
         <Container>
+          <NavBar
+            redirectQuizView={this.redirectQuizView.bind(this)}
+            quiz={quiz}>
+          </NavBar>
           <h4>New Quiz</h4>
           {this.props.quiz.error !== null &&
             <p>There was an error submitting your quiz.  Please try again.</p>
@@ -97,7 +150,7 @@ class NewQuiz extends Component {
           {editMode ?
             (
               <NewQuizFormWrapper submitEdit={this.submitEdit.bind(this)}
-                quiz={quiz}/>
+                quiz={quiz} />
             )
             :
             (
