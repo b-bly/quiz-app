@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Route } from 'react-router-dom'
 // Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTrash, faPencilAlt, faStroopwafel, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faPencilAlt, faStroopwafel, faEdit, faCheck } from '@fortawesome/free-solid-svg-icons'
 
 
 // style
@@ -14,7 +14,7 @@ import NewQuiz from './scenes/NewQuiz/new-quiz'
 import QuizView from './scenes/QuizView/quiz-view'
 import AddQuestion from './scenes/NewQuiz/add-question.js'
 
-library.add(faTrash, faPencilAlt, faStroopwafel, faEdit)
+library.add(faTrash, faPencilAlt, faStroopwafel, faEdit, faCheck)
 
 
 class App extends Component {

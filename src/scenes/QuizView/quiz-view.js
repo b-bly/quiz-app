@@ -119,16 +119,16 @@ const QuizButton = styled(FontAwesomeIcon)`
 const Row = styled.div`
   display: inline-block;`
 
-const EditQuiz = (props) => {
-  const editQuiz = () => {
-    props.editQuiz(props.quiz);
+const ActionButton = (props) => {
+  const action = () => {
+    props.action(props.data);
   }
   return (
-    <QuizButton icon="edit"
-    color={colors.blue}
-    onClick={editQuiz.bind(this)}
-    style={{ display: 'inline-block' }}>
-  </QuizButton>
+    <QuizButton icon={props.icon}
+      color={colors.blue}
+      onClick={action}
+      style={props.style}>
+    </QuizButton>
   )
 }
 
@@ -139,10 +139,19 @@ class QuestionList extends Component {
       redirectTo: null
     }
   }
+  editQuestion(question) {
+    const redirectObj = {
+      pathname: '/add-question/?id=' + question.id,
+      state: question
+    }
+    this.setState({
+      redirectTo: redirectObj
+    })
+  }
   render() {
     console.log('this.props.location')
     console.log(this.props.location)
-    console.log('quiz.questions');
+    console.log('quiz.questions')
     console.log(this.props.selectedQuiz.questions)
     let questions = null
     if (this.props.selectedQuiz) {
@@ -155,23 +164,38 @@ class QuestionList extends Component {
             <CenteredContainer>
               <p style={{ color: colors.gray700 }}>{question.text}</p>
             </CenteredContainer>
+            <CenteredContainer  style={{width: '100%'}}>
+              <ActionButton
+                style={{ display: 'inline-block', marginLeft: 'auto' }}
+                icon="edit"
+                data={question}
+                action={this.editQuestion.bind(this)}
+              >
+              </ActionButton>
+            </CenteredContainer>
           </QuestionContainer>
         )
       }
     }
     console.log('questions:');
     console.log(questions);
-    return (
-      <Fragment>
-        {questions ?
-          <Fragment>
-            {questions}
-          </Fragment>
-          :
-          <div>This quiz has no questions</div>
-        }
-      </Fragment>
-    )
+    if (this.state.redirectTo) {
+      return (
+        <Redirect to={this.state.redirectTo} />
+      )
+    } else {
+      return (
+        <Fragment>
+          {questions ?
+            <Fragment>
+              {questions}
+            </Fragment>
+            :
+            <div>This quiz has no questions</div>
+          }
+        </Fragment>
+      )
+    }
   }
 }
 
@@ -267,11 +291,12 @@ class QuizView extends Component {
           <Row>
             <h1 style={{ display: 'inline-block' }}>{quiz.name}</h1>
 
-            <EditQuiz
-              quiz={quiz}
+            <ActionButton
+              icon="edit"
+              data={quiz}
               editQuiz={this.editQuiz.bind(this)}
-              >
-            </EditQuiz>
+            >
+            </ActionButton>
 
           </Row>
           <AddQuestionCard>

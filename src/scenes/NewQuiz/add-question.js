@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import AddQuestionForm from './add-question-form';
 //Style
 import styled from 'styled-components'
+
 // Actions
 import { selectQuiz, resetQuestionForm, postNewQuestionRequest, getQuizzesError } from '../ducks/actions'
 
@@ -98,12 +99,25 @@ class AddQuestion extends Component {
     return quiz_id
   }
 
+  getQuestion() {
+    let question = null;
+    if (this.props.location.state) {
+      question = this.props.location.state
+    }
+    console.log('************ question ************')
+    console.log(question);
+    //     a: "fdsa"
+    // correct_answer: "a"
+    // text: "fdsa"
+    return question
+  }
+
   render() {
     // get selected quiz info from react router (in redirect from quiz-view.js)
 
     const quiz = this.getQuiz()
     const quiz_id = this.getQuizId()
-
+    const question = this.getQuestion()
     const quizViewRedirectObj = {
       pathname: '/view-quiz/?quiz_id=' + quiz_id,
       state: quiz
@@ -129,6 +143,8 @@ class AddQuestion extends Component {
               <p>There was an error submitting your quiz.  Please try again.</p>
             }
             <AddQuestionForm
+              initialValues={question}
+              MCInitialValues={question}
               onSubmit={this.submit.bind(this)} />
           </Container>
         </Background>

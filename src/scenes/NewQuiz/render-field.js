@@ -3,7 +3,8 @@ import styled from 'styled-components'
 
 const Input = styled.input`
   font-size: 16px;
-  padding: 5px;
+  // padding: 5px;
+  margin: 0;
   outline:0;
   border: none;
   border: 1px solid lightgray;

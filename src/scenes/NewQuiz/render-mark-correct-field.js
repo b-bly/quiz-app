@@ -1,9 +1,11 @@
 import React, { Fragment } from 'react'
+// Style
 import styled from 'styled-components'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const Button = styled.button`
   display: inline-block;
+  vertical-align: center;
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
@@ -23,7 +25,8 @@ const Button = styled.button`
   border-radius: 20px;
   outline:0;
   text-decoration: none;
-  width: ${props => props.minus ? '38px' : 'auto'};
+  width: 38px;
+  height: 38px;
   cursor: pointer;
 
 &:hover, .btn:focus {
@@ -62,7 +65,13 @@ const renderMarkCorrectField = ({
         type={ type }
         onClick={ handleSubmit }
         color={ color }
-      >c</Button>
+      >
+        <FontAwesomeIcon
+          icon="check"
+          style={{fontSize: '12px'}} />
+
+        
+      </Button>
     </Fragment>
   );
 }
