@@ -139,15 +139,20 @@ class QuestionList extends Component {
       redirectTo: null
     }
   }
+
   editQuestion(question) {
     const redirectObj = {
-      pathname: '/add-question/?id=' + question.id,
-      state: question
+      pathname: '/edit-question/?quiz_id=' + this.props.selectedQuiz.quiz_id,
+      state: {
+        question: question,
+        quiz: this.props.selectedQuiz
+      }
     }
     this.setState({
       redirectTo: redirectObj
     })
   }
+
   render() {
     console.log('this.props.location')
     console.log(this.props.location)
@@ -164,7 +169,7 @@ class QuestionList extends Component {
             <CenteredContainer>
               <p style={{ color: colors.gray700 }}>{question.text}</p>
             </CenteredContainer>
-            <CenteredContainer  style={{width: '100%'}}>
+            <CenteredContainer style={{ width: '100%' }}>
               <ActionButton
                 style={{ display: 'inline-block', marginLeft: 'auto' }}
                 icon="edit"
@@ -215,8 +220,11 @@ class QuizView extends Component {
     const quiz = this.getQuiz()
     const quiz_id = this.getQuizId()
     const redirectObj = {
-      pathname: '/add-question/?quiz_id=' + quiz.quiz_id,
-      state: quiz
+      pathname: '/add-question/?quiz_id=' + quiz_id,
+      state: {
+        question: null,
+        quiz: quiz
+      },
     }
     this.setState({
       redirectTo: redirectObj
@@ -225,8 +233,6 @@ class QuizView extends Component {
 
   redirectHome() {
     console.log('redirecting home');
-
-
     this.setState({
       redirectTo: { pathname: '/' }
     }, function () {
@@ -235,15 +241,17 @@ class QuizView extends Component {
   }
 
   getQuiz() {
-    let quiz = null;
-    if (this.props.selectedQuiz) {
-      if (this.props.selectedQuiz.questions) {
-        quiz = this.props.selectedQuiz
-      }
-    } else if (this.props.location.state) {
-      quiz = this.props.location.state
+    let selectedQuiz = null;
+    if (this.props.location.state) {
+      selectedQuiz = this.props.location.state
+    } else {
+      const quiz_id = this.props.location.search.replace(/\?quiz_id=/, '')
+      this.props.quizzes.forEach((quiz) => {
+        console.log(quiz)
+        if (quiz_id == quiz.quiz_id) selectedQuiz = { ...quiz }
+      })
     }
-    return quiz
+    return selectedQuiz
   }
 
   getQuizId() {
@@ -272,6 +280,8 @@ class QuizView extends Component {
     let quiz = this.getQuiz()
     console.log('***** quiz ******')
     console.log(quiz)
+    console.log('props');
+    console.log(this.props)
     // if quiz is passed from home.js through redirect object
 
     if (this.state.redirectTo) {
@@ -294,7 +304,7 @@ class QuizView extends Component {
             <ActionButton
               icon="edit"
               data={quiz}
-              editQuiz={this.editQuiz.bind(this)}
+              action={this.editQuiz.bind(this)}
             >
             </ActionButton>
 

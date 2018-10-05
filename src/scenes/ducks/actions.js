@@ -36,9 +36,9 @@ export const getQuizzesError = error => ({
 });
 // New Question
 
-export const postNewQuestionRequest = () => ({
+export const postNewQuestionRequest = (quiz) => ({
   type: types.POST_NEW_QUESTION_REQUEST,
-  payload: null
+  payload: quiz
 });
 
 export const postNewQuestionSuccess = data => ({
@@ -87,5 +87,20 @@ export const updateQuizSuccess = data => ({
 
 export const updateQuizError = error => ({
   type: types.UPDATE_QUIZ_ERROR,
+  error
+});
+
+export const updateQuestionRequest = (question_id) => ({
+  type: types.UPDATE_QUESTION_REQUEST,
+  payload: question_id
+});
+
+export const updateQuestionSuccess = data => ({
+  type: types.UPDATE_QUESTION_SUCCESS,
+  payload: data
+});
+
+export const updateQuestionError = error => ({
+  type: types.UPDATE_QUESTION_ERROR,
   error
 });

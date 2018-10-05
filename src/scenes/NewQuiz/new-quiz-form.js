@@ -6,6 +6,7 @@ import renderField from './render-field'
 // import renderMarkCorrectField from './render-mark-correct-field'
 // Style
 import styled from 'styled-components'
+import { colors } from '../Style/constants';
 // import { colors } from '../Style/constants'
 
 
@@ -112,6 +113,38 @@ const ButtonContainer = styled.div`
   text-align:right;
 `
 
+const SubmitButton = styled.input`
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 3px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  background-color: ${props => props.color};
+  color: white;
+  border-radius: 20px;
+  outline:0;
+  text-decoration: none;
+  width: ${props => props.minus ? '38px' : 'auto'};
+
+&:hover, .btn:focus {
+  text-decoration: none;
+  opacity: .8;
+}
+
+&:focus, .btn.focus {
+  outline: 0;
+}
+`
 
 class NewQuizForm extends Component {
   constructor(props) {
@@ -144,10 +177,11 @@ class NewQuizForm extends Component {
        
         <FormGroup>
           <Column></Column>
-          <input
+          <SubmitButton
             className="btn btn-primary"
             type="submit"
             value="Submit"
+            color={colors.green}
           />
         </FormGroup>
       </Form>

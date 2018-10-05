@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
+
 // Redux form
 import { Field, reduxForm } from 'redux-form'
 import renderField from './render-field'
@@ -103,6 +105,7 @@ const Button = styled.button`
   outline:0;
   text-decoration: none;
   width: ${props => props.minus ? '38px' : 'auto'};
+  cursor: pointer;
 
 &:hover, .btn:focus {
   text-decoration: none;
@@ -206,8 +209,17 @@ class AddQuestionForm extends Component {
     this.answerLettersMap = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.initialValues) {
+      if (nextProps.initialValues.correct_answer) {
+        this.setState({
+          correctAnswer: nextProps.initialValues.correct_answer
+        })
+      }
+    }
+  }
+
   addAnswerBlank() {
-    console.log('clicked');
     this.numberOfAnswerBlanks++
     const newLetter = this.answerLettersMap[this.numberOfAnswerBlanks - 1]
     const answerLetterCopy = this.state.answerLetters.slice();
@@ -237,10 +249,31 @@ class AddQuestionForm extends Component {
     })
   }
 
+  cancel(e) {
+    e.stopPropagation();
+    const redirectObject = {
+      pathname: '/view-quiz/?quiz_id=' + this.props.quiz.quiz_id,
+      state: this.props.quiz
+    }
+    this.setState({
+      redirectTo: redirectObject,
+    })
+  }
+
   render() {
     // ***************************
     // handleSubmit is automatically passed down as props.  Is this a react thing?  A redux form thing?
+    console.log('props');
+    console.log(this.props);
+
     const { handleSubmit } = this.props
+    if (this.state.redirectTo) {
+      return (
+        <Redirect
+          to={this.state.redirectTo}
+        />
+      )
+    }
     return (
       <Form onSubmit={handleSubmit}>
         <QuestionContainer>
@@ -288,11 +321,21 @@ class AddQuestionForm extends Component {
         </QuestionContainer>
         <FormGroup>
           <Column></Column>
-          <SubmitButton
-            type="submit"
-            value="Submit"
-            color={colors.green}
-          />
+          <FormContainer>
+            <Button
+              type="button"
+              color="gray"
+              onClick={this.cancel.bind(this)}> Cancel
+          </Button>
+          </FormContainer>
+          <FormContainer>
+            <SubmitButton
+              type="submit"
+              value="Submit"
+              color={colors.green}
+            />
+          </FormContainer>
+
         </FormGroup>
       </Form>
     )

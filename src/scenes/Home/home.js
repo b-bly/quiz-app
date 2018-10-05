@@ -140,6 +140,10 @@ class QuizListItem extends Component {
   }
 
   render() {
+    let numberOfQuestions = 0
+    if (this.props.quiz.questions) {
+      numberOfQuestions = this.props.quiz.questions.length
+    }
 
     if (this.state.redirectTo) {
       return (
@@ -154,7 +158,7 @@ class QuizListItem extends Component {
           onClick={this.loadQuiz.bind(this)}>
           <Column>
             <Name>Quiz: {this.props.quiz.name}</Name>
-            <Questions>Questions: {this.props.quiz.questions.length}</Questions>
+            <Questions>Questions: {numberOfQuestions}</Questions>
           </Column>
           <RightContainer>
             <QuizButton icon="trash"

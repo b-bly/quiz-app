@@ -41,7 +41,10 @@ class App extends Component {
           path="/add-question"
           component={AddQuestion}
         />
-        
+        <Route
+          path="/edit-question"
+          component={AddQuestion}
+        />
       </div>
     );
   }

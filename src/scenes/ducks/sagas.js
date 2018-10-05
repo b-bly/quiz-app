@@ -16,10 +16,12 @@ import {
   deleteQuizError,
   updateQuizSuccess,
   updateQuizError,
+  updateQuestionSuccess,
+  updateQuestionError,
 } from './actions';
 
 // Selectors
-import { makeSelectNewQuiz, makeSelectNewQuestion, makeSelectQuiz } from './selectors';
+import { makeSelectNewQuiz, makeSelectNewQuestion, makeSelectQuizzes, } from './selectors';
 
 // async data
 const postNewQuizAsync = (data) => {
@@ -39,7 +41,7 @@ const getQuizzesAsync = () => {
 }
 
 const deleteQuizAsync = (data) => {
-  return axios.delete('/quiz/', {
+  return axios.delete('/quiz', {
     params: data,
   })
 }
@@ -50,36 +52,16 @@ const updateQuizAsync = (data) => {
   })
 }
 
+const updateQuestionAsync = (data) => {
+  return axios.put('/quiz/updatequestion', {
+    data,
+  })
+}
+
 //Saga
 function* postNewQuiz(action) {
   try {
-
-    // to do use selectors to get data
     const data = yield select(makeSelectNewQuiz());
-    console.log(data);
-    // Sample quiz data
-    // name:"Ma ma mia"
-
-
-
-    // redux state sample
-    // {
-    //   quizzes: [
-    //     {
-    //        id: '',
-    //       name: '',
-    //       type: '',
-    //       questions: [
-    //         {
-    //           text: '',
-    //           correct_answer: '',
-    //           a: ''
-    //         }
-    //       ]
-    //     }
-    //   ]
-    // }
-
     const formattedData = {
       name: data.name,
       type: 'multiple choice'
@@ -98,53 +80,12 @@ function* postNewQuiz(action) {
 
 function* postNewQuestion(action) {
   try {
-
-    // to do use selectors to get data
     const newQuestion = yield select(makeSelectNewQuestion());
-    const selectedQuiz = yield select(makeSelectQuiz())
+    const selectedQuiz = { ...action.payload }
     newQuestion.quiz_id = selectedQuiz.quiz_id
-    // Sample question data
-    // a: "fdsa"
-    // correct_answer: "a"
-    // text: "fdsa"
-
-
-    // redux state sample
-    // {
-    //   quizzes: [
-    //     {
-    //        id: '',
-    //       name: '',
-    //       type: '',
-    //       questions: [
-    //         {
-    //           text: '',
-    //           correct_answer: '',
-    //           a: ''
-    //         }
-    //       ]
-    //     }
-    //   ]
-    // }
 
     const formattedData = { ...selectedQuiz }
     formattedData.questions = [...formattedData.questions, newQuestion]
-    
-    // const alphabet = []
-    // for (let i = 97; i < 97 + 26; i++) {
-    //   const nextLetter = String.fromCharCode(i)
-    //   alphabet.push(nextLetter)
-    // }
-    // // handle all answers a, b, c etc
-    // for (let key in data) {
-    //   for (let letter of alphabet) {
-    //     if (key === letter) {
-    //       formattedData.questions[0][letter] = data[letter]
-    //     }
-    //   }
-    // }
-    console.log('formatted data')
-    console.log(formattedData);
 
     yield call(postNewQuestionAsync, { ...newQuestion });
 
@@ -166,9 +107,6 @@ function* getQuizzes() {
 
 function* deleteQuiz(action) {
   try {
-    // to do use selectors to get data
-    console.log('*** action.payload ***')
-    console.log(action.payload);
     const data = { quiz_id: action.payload };
     yield call(deleteQuizAsync, data);
     yield put(deleteQuizSuccess(data));
@@ -185,12 +123,36 @@ function* updateQuiz(action) {
       name: quizName.name,
       quiz_id: action.payload,
     }
-    console.log('*** data ***')
-    console.log(data);
+
     yield call(updateQuizAsync, data)
     yield put(updateQuizSuccess(data))
   } catch (error) {
     yield put(updateQuizError({ ...error }))
+  }
+}
+
+function* updateQuestion(action) {
+  try {
+    const quizzes = yield select(makeSelectQuizzes());
+    const updatedQuestion = yield select(makeSelectNewQuestion());
+    let selectedQuiz = null
+    quizzes.forEach((quiz) => {
+      if (quiz.quiz_id == updatedQuestion.quiz_id) {
+        selectedQuiz = quiz
+      }
+    })
+    updatedQuestion.id = action.payload;
+    updatedQuestion.quiz_id = selectedQuiz.quiz_id
+
+    const formattedData = { ...selectedQuiz }
+    formattedData.questions = [...formattedData.questions, updatedQuestion]
+    console.log('***** updated question *****')
+    console.log(updatedQuestion)
+
+    yield call(updateQuestionAsync, { ...updatedQuestion });
+    yield put(updateQuestionSuccess({ ...formattedData }));
+  } catch (error) {
+    yield put(updateQuestionError({ ...error }))
   }
 }
 
@@ -200,6 +162,7 @@ function* quizSaga() {
   yield takeLatest(types.POST_NEW_QUESTION_REQUEST, postNewQuestion);
   yield takeLatest(types.DELETE_QUIZ_REQUEST, deleteQuiz)
   yield takeLatest(types.UPDATE_QUIZ_REQUEST, updateQuiz)
+  yield takeLatest(types.UPDATE_QUESTION_REQUEST, updateQuestion)
 }
 
 export default quizSaga;

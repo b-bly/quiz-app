@@ -9,7 +9,7 @@ import AddQuestionForm from './add-question-form';
 import styled from 'styled-components'
 
 // Actions
-import { selectQuiz, resetQuestionForm, postNewQuestionRequest, getQuizzesError } from '../ducks/actions'
+import { selectQuiz, resetQuestionForm, postNewQuestionRequest, updateQuestionRequest } from '../ducks/actions'
 
 const Background = styled.div`
   background-color: rgb(236, 236, 236);
@@ -59,8 +59,17 @@ class AddQuestion extends Component {
   }
 
   submit() {
-    console.log('new quiz form submit: ')
-    this.props.postNewQuestionRequest();
+    console.log('******* new question form submit: *******')
+    const quiz = this.getQuiz()
+    this.props.postNewQuestionRequest(quiz);
+    this.setState({
+      submitClicked: true
+    })
+  }
+
+  submitEdit() {
+    console.log('update question form submit: ')
+    this.props.updateQuestionRequest(this.props.location.state.id);
     this.setState({
       submitClicked: true
     })
@@ -68,8 +77,9 @@ class AddQuestion extends Component {
 
   close() {
     this.props.resetQuestionForm();
-    const quiz = this.getQuiz();
-    const quiz_id = this.getQuizId();
+    const question = this.getQuestion()
+    const quiz = question.quiz
+    const quiz_id = question.quiz_id
     this.setState({
       redirectTo: {
         pathname: '/view-quiz/?quiz_id=' + quiz_id,
@@ -79,34 +89,26 @@ class AddQuestion extends Component {
   }
 
   getQuiz() {
-    let quiz = null;
-    if (this.props.quiz.selectedQuiz) {
-      quiz = this.props.quiz
-      if (this.props.location.state) {
-        quiz = this.props.location.state
-      }
+    let selectedQuiz = null;
+    if (this.props.location.state) {
+      selectedQuiz = this.props.location.state.quiz
+    } else {
+      const quiz_id = this.props.location.search.replace(/\?quiz_id=/, '')
+      this.props.quiz.quizzes.forEach((quiz) => {
+        console.log(quiz)
+        if (quiz_id == quiz.quiz_id) selectedQuiz = { ...quiz }
+      })
     }
-    return quiz
-  }
-
-  getQuizId() {
-    let quiz_id = null
-    if (this.props.quiz.selectedQuiz) {
-      quiz_id = this.props.quiz.selectedQuiz.quiz_id
-    } else if (this.props.location.search) {
-      quiz_id = this.props.location.search.replace(/\?quiz_id=/, '')
-    }
-    return quiz_id
+    return selectedQuiz
   }
 
   getQuestion() {
     let question = null;
     if (this.props.location.state) {
-      question = this.props.location.state
+      question = this.props.location.state.question
     }
-    console.log('************ question ************')
-    console.log(question);
-    //     a: "fdsa"
+
+    // a: "fdsa"
     // correct_answer: "a"
     // text: "fdsa"
     return question
@@ -114,14 +116,17 @@ class AddQuestion extends Component {
 
   render() {
     // get selected quiz info from react router (in redirect from quiz-view.js)
-
-    const quiz = this.getQuiz()
-    const quiz_id = this.getQuizId()
+    console.log('************ props ************')
+    console.log(this.props.location);
     const question = this.getQuestion()
+    const quiz_id = this.props.location.search.replace(/\?quiz_id=/, '')
+    const quiz = this.getQuiz();
+
     const quizViewRedirectObj = {
       pathname: '/view-quiz/?quiz_id=' + quiz_id,
       state: quiz
     }
+    const mode = this.props.location.pathname.search(/edit/) === -1 ? 'add' : 'edit';
     console.log('this.props', this.props)
     if (this.props.quiz.isLoading === false &&
       this.props.quiz.error === null &&
@@ -142,10 +147,16 @@ class AddQuestion extends Component {
             {this.props.quiz.error !== null &&
               <p>There was an error submitting your quiz.  Please try again.</p>
             }
-            <AddQuestionForm
-              initialValues={question}
-              MCInitialValues={question}
-              onSubmit={this.submit.bind(this)} />
+            {mode === 'edit' ? (
+              <AddQuestionForm
+                initialValues={question}
+                onSubmit={this.submitEdit.bind(this)}
+                quiz={quiz} />
+            ) : (
+                <AddQuestionForm
+                  onSubmit={this.submit.bind(this)}
+                  quiz={quiz} />
+              )}
           </Container>
         </Background>
       )
@@ -164,6 +175,7 @@ function mapDispatchToProps(dispatch) {
     postNewQuestionRequest: postNewQuestionRequest,
     selectQuiz: selectQuiz,
     resetQuestionForm: resetQuestionForm,
+    updateQuestionRequest: updateQuestionRequest,
   }, dispatch);
 }
 

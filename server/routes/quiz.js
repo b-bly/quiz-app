@@ -140,7 +140,7 @@ router.get('/', (req, res) => {
                                             quiz_id: quiz.quiz_id,
                                             name: quiz.name,
                                             type: quiz.type,
-                                            questions: []
+                                            questions: [],
                                         }
                                     })
                                     const alphabet = []
@@ -153,7 +153,8 @@ router.get('/', (req, res) => {
                                     questions.forEach((row, j) => {
                                         const question = {
                                             text: row.text,
-                                            correct_answer: row.correct_answer
+                                            correct_answer: row.correct_answer,
+                                            id: row.id
                                         }
                                         for (let letter of alphabet) {
                                             if (row[letter]) {
@@ -169,7 +170,7 @@ router.get('/', (req, res) => {
                                         quizzesArray.push(quizzes[key])
                                     }
                                     console.log('quizzes')
-                                    console.log(quizzesArray)
+                                    console.log(quizzesArray[0].questions)
                                     res.send(quizzesArray)
                                 }
                             })
@@ -185,20 +186,36 @@ router.delete('/', (req, res) => {
     const { quiz_id } = req.query;
     // console.log(req.query);
     const deleteQuery = 'DELETE from quiz WHERE quiz_id=' + quiz_id + ';'
+    const deleteQuestionsQuery = 'DELETE from multiple_choice_questions WHERE quiz_id=' + quiz_id + ';'
 
     pool.connect((err, client, done) => {
         if (err) {
             console.log('Error connecting to database', err)
             res.sendStatus(500)
         } else {
-            client.query(deleteQuery, (err, result) => {
+            client.query(deleteQuestionsQuery, (err, result) => {
                 done();
                 if (err) {
-                    console.log('Error making delete quiz query: ', err)
+                    console.log('Error making delete questions query: ', err)
                     res.sendStatus(500);
                 } else {
-                    console.log(result)
-                    res.send(result)
+                    pool.connect((err, client, done) => {
+                        if (err) {
+                            console.log('Error connecting to database', err)
+                            res.sendStatus(500)
+                        } else {
+                            client.query(deleteQuery, (err, result) => {
+                                done();
+                                if (err) {
+                                    console.log('Error making delete quiz query: ', err)
+                                    res.sendStatus(500);
+                                } else {
+                                    console.log(result)
+                                    res.send(result)
+                                }
+                            })
+                        }
+                    })
                 }
             })
         }
@@ -209,7 +226,7 @@ router.put('/', (req, res) => {
     const { name, quiz_id } = req.body.data
     console.log('req.body.data: ')
     console.log(req.body.data);
-    
+
     const quizQuery = `UPDATE quiz SET name=($1) WHERE quiz_id=($2)`
     const values = [name, quiz_id]
     // client.query('UPDATE items SET text=($1), complete=($2) WHERE id=($3)',
@@ -232,6 +249,67 @@ router.put('/', (req, res) => {
         }
     })
 })
+
+
+router.put('/updatequestion', (req, res) => {
+    console.log('req.body.data: ')
+    console.log(req.body.data);
+    const questionQuery = createUpdateMultipleChoiceQuery({ ...req.body.data });
+    console.log('questionArray');
+    console.log(questionQuery)
+    // UPDATE items SET text=($1), complete=($2) WHERE id=($3)'
+    // UPDATE multiple_choice_questions SET text=($1)... WHERE id=($n)
+
+    // req.body
+    // { text: 'fdsa', correct_answer: 'a', a: 'fdsa', quiz_id: 10 }
+
+    // questionQuery
+    //     { text: 'INSERT INTO multiple_choice_questions (text, correct_answer, a, quiz_id) VALUES ($1, $2, $3, $4)',
+    //   values: [ 'fdsa', 'a', 'fdsa', 10 ] }
+
+    pool.connect((err, client, done) => {
+        if (err) {
+            console.log('Error connecting to database', err)
+            res.sendStatus(500)
+        } else {
+            client.query(questionQuery, (err, result) => {
+                done();
+                if (err) {
+                    console.log('Error making question update query: ', err)
+                    res.sendStatus(500);
+                } else {
+                    console.log(result)
+                    res.send(result)
+                }
+            })
+        }
+    })
+})
+// For updating more than one row at once... https://stackoverflow.com/questions/1109061/insert-on-duplicate-update-in-postgresql
+// and
+// https://stackoverflow.com/questions/20255138/sql-update-multiple-records-in-one-query
+
+// UPDATE multiple_choice_questions SET text=($1), correct_answer=($2),... WHERE id=($n)
+function createUpdateMultipleChoiceQuery (row) {
+    const values = [];
+    const columns = [];
+    let rowLength = 0
+    for (key in row) {
+        rowLength ++
+        if (key != id) {
+            const n = i + 1
+            const expression = key + '=($' + n + ')'
+            columns.push(expression)
+            values.push(row[key])
+        } 
+    }
+    // push id last
+    values.push(row.id);
+    return {
+        text: 'UPDATE multiple_choice_questions SET ' + colunns.join(', ') + 'WHERE id=($' + rowLength + ');',
+        values: values
+    }
+}
 
 function createMultipleChoiceQuery(rows) {
     console.log('rows', rows);

@@ -32,26 +32,26 @@ export const makeSelectNewQuestion = () =>
     }
   });
 
+  // export const makeSelectQuiz = () =>
+  // createSelector(selectQuiz, substate => {
+  //   console.log('substate');
+  //   console.log(substate);
+  //   if (substate) {
+  //     if (substate.selectedQuiz) {
+  //       return substate.selectedQuiz
+  //     }
+  //   }
+  // });
+
 export const makeSelectQuizzes = () =>
   createSelector(selectQuiz, substate => {
-    console.log('selectGlobalState');
+    console.log('**** selectGlobalState ****');
     console.log(substate);
     console.log(selectQuiz);
     if (substate) {
-        if (substate.quizzes) {
-          return substate.quizzes
-        }
-      
-    }
-  });
-
-  export const makeSelectQuiz = () =>
-  createSelector(selectQuiz, substate => {
-    console.log('substate');
-    console.log(substate);
-    if (substate) {
-      if (substate.selectedQuiz) {
-          return substate.selectedQuiz
+      if (substate.quizzes) {
+        return substate.quizzes
       }
     }
   });
+
