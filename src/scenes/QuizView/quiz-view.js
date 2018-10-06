@@ -215,6 +215,7 @@ class QuizView extends Component {
   componentDidMount() {
     this.props.getQuizzesRequest();
   }
+
   // on mount, get quizzes if selected quiz not available
   showAddNewQuestionForm() {
     const quiz = this.getQuiz()
@@ -242,15 +243,16 @@ class QuizView extends Component {
 
   getQuiz() {
     let selectedQuiz = null;
-    if (this.props.location.state) {
-      selectedQuiz = this.props.location.state
-    } else {
-      const quiz_id = this.props.location.search.replace(/\?quiz_id=/, '')
-      this.props.quizzes.forEach((quiz) => {
-        console.log(quiz)
-        if (quiz_id == quiz.quiz_id) selectedQuiz = { ...quiz }
-      })
+    if (this.props.selectedQuiz !== null) {
+      return this.props.selectedQuiz
     }
+    const quiz_id = this.props.location.search.replace(/\?quiz_id=/, '')
+    this.props.quizzes.forEach((quiz) => {
+      if (quiz_id == quiz.quiz_id) selectedQuiz = { ...quiz }
+    })
+
+    console.log('*** get quiz ***');
+    console.log(selectedQuiz)
     return selectedQuiz
   }
 
@@ -276,7 +278,7 @@ class QuizView extends Component {
   }
 
   render() {
-    const quiz_id = this.getQuizId();
+    // const quiz_id = this.getQuizId();
     let quiz = this.getQuiz()
     console.log('***** quiz ******')
     console.log(quiz)

@@ -293,12 +293,11 @@ router.put('/updatequestion', (req, res) => {
 function createUpdateMultipleChoiceQuery (row) {
     const values = [];
     const columns = [];
-    let rowLength = 0
+    let i = 0
     for (key in row) {
-        rowLength ++
-        if (key != id) {
-            const n = i + 1
-            const expression = key + '=($' + n + ')'
+        if (key != 'id') {
+            i ++
+            const expression = key + '=($' + i + ')'
             columns.push(expression)
             values.push(row[key])
         } 
@@ -306,7 +305,7 @@ function createUpdateMultipleChoiceQuery (row) {
     // push id last
     values.push(row.id);
     return {
-        text: 'UPDATE multiple_choice_questions SET ' + colunns.join(', ') + 'WHERE id=($' + rowLength + ');',
+        text: 'UPDATE multiple_choice_questions SET ' + columns.join(', ') + ' WHERE id=($' + (i + 1) + ');',
         values: values
     }
 }

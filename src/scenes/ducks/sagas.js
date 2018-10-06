@@ -133,24 +133,19 @@ function* updateQuiz(action) {
 
 function* updateQuestion(action) {
   try {
-    const quizzes = yield select(makeSelectQuizzes());
+    // I tried using a selector to get the current quiz, but ran into a puzzling error
+    // That occured when calling more than one selector.
+    // Calling just makeSelectNewQuestion or just makeSelectQuiz was fine
+    // But an error was triggered with both being called.
     const updatedQuestion = yield select(makeSelectNewQuestion());
-    let selectedQuiz = null
-    quizzes.forEach((quiz) => {
-      if (quiz.quiz_id == updatedQuestion.quiz_id) {
-        selectedQuiz = quiz
-      }
-    })
-    updatedQuestion.id = action.payload;
-    updatedQuestion.quiz_id = selectedQuiz.quiz_id
 
-    const formattedData = { ...selectedQuiz }
-    formattedData.questions = [...formattedData.questions, updatedQuestion]
+    const quiz = action.payload
+    updatedQuestion.quiz_id = quiz.quiz_id
     console.log('***** updated question *****')
     console.log(updatedQuestion)
 
     yield call(updateQuestionAsync, { ...updatedQuestion });
-    yield put(updateQuestionSuccess({ ...formattedData }));
+    yield put(updateQuestionSuccess({ ...updatedQuestion }));
   } catch (error) {
     yield put(updateQuestionError({ ...error }))
   }

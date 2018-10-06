@@ -69,7 +69,8 @@ class AddQuestion extends Component {
 
   submitEdit() {
     console.log('update question form submit: ')
-    this.props.updateQuestionRequest(this.props.location.state.id);
+    const quiz = this.getQuiz()
+    this.props.updateQuestionRequest(quiz);
     this.setState({
       submitClicked: true
     })

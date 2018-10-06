@@ -90,9 +90,9 @@ export const updateQuizError = error => ({
   error
 });
 
-export const updateQuestionRequest = (question_id) => ({
+export const updateQuestionRequest = (quiz) => ({
   type: types.UPDATE_QUESTION_REQUEST,
-  payload: question_id
+  payload: quiz
 });
 
 export const updateQuestionSuccess = data => ({

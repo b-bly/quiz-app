@@ -193,27 +193,33 @@ function quizReducer(state = INITIAL_STATE, action) {
         error: null,
       };
     }
-    case types.POST_NEW_QUESTION_REQUEST: {
+    case types.UPDATE_QUESTION_REQUEST: {
       return {
         ...state,
         error: null,
       };
     }
-    case types.POST_NEW_QUESTION_ERROR: {
+    case types.UPDATE_QUESTION_ERROR: {
       return {
         ...state,
         isLoading: false,
         error: action.error
       };
     }
-    case types.POST_NEW_QUESTION_SUCCESS: {
+    case types.UPDATE_QUESTION_SUCCESS: {
       return {
         ...state,
         quizzes: [
           ...Object.assign([], state.quizzes).map((quiz, i) => {
             if (action.payload.quiz_id === quiz.quiz_id) {
               const updatedQuiz = { ...quiz }
-              updatedQuiz.questions = action.payload.questions
+              updatedQuiz.questions = updatedQuiz.questions.map((question) => {
+                if (question.id == action.payload.id) {
+                  return action.payload
+                } else {
+                  return question
+                }
+              })
               return updatedQuiz
             } else {
               return quiz
