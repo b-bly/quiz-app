@@ -104,3 +104,18 @@ export const updateQuestionError = error => ({
   type: types.UPDATE_QUESTION_ERROR,
   error
 });
+
+export const deleteQuestionRequest = (data) => ({
+  type: types.DELETE_QUESTION_REQUEST,
+  payload: data
+});
+
+export const deleteQuestionSuccess = data => ({
+  type: types.DELETE_QUESTION_SUCCESS,
+  payload: data
+});
+
+export const deleteQuestionError = error => ({
+  type: types.DELETE_QUESTION_ERROR,
+  error
+});

@@ -18,6 +18,8 @@ import {
   updateQuizError,
   updateQuestionSuccess,
   updateQuestionError,
+  deleteQuestionSuccess,
+  deleteQuestionError
 } from './actions';
 
 // Selectors
@@ -58,6 +60,12 @@ const updateQuestionAsync = (data) => {
   })
 }
 
+const deleteQuestionAsync = (id) => {
+  return axios.delete('/quiz/question', {
+    params: id
+  })
+}
+
 //Saga
 function* postNewQuiz(action) {
   try {
@@ -70,7 +78,7 @@ function* postNewQuiz(action) {
     console.log(formattedData);
 
     yield call(postNewQuizAsync, { ...formattedData });
-
+    formattedData.questions = []
     yield put(postNewQuizSuccess({ ...formattedData }));
   } catch (error) {
     console.log(error);
@@ -85,7 +93,8 @@ function* postNewQuestion(action) {
     newQuestion.quiz_id = selectedQuiz.quiz_id
 
     const formattedData = { ...selectedQuiz }
-    formattedData.questions = [...formattedData.questions, newQuestion]
+    const questions = formattedData.questions ? [...formattedData.questions] : []
+    formattedData.questions = [...questions, newQuestion]
 
     yield call(postNewQuestionAsync, { ...newQuestion });
 
@@ -151,6 +160,15 @@ function* updateQuestion(action) {
   }
 }
 
+function* deleteQuestion(action) {
+  try {
+    yield call(deleteQuestionAsync, action.payload)
+    yield put(deleteQuestionSuccess(action.payload))
+  } catch (error) {
+    yield put(deleteQuestionError({ ...error }))
+  }
+}
+
 function* quizSaga() {
   yield takeLatest(types.POST_NEW_QUIZ_REQUEST, postNewQuiz);
   yield takeLatest(types.GET_QUIZZES_REQUEST, getQuizzes);
@@ -158,6 +176,8 @@ function* quizSaga() {
   yield takeLatest(types.DELETE_QUIZ_REQUEST, deleteQuiz)
   yield takeLatest(types.UPDATE_QUIZ_REQUEST, updateQuiz)
   yield takeLatest(types.UPDATE_QUESTION_REQUEST, updateQuestion)
+  yield takeLatest(types.DELETE_QUESTION_REQUEST, deleteQuestion)
+
 }
 
 export default quizSaga;

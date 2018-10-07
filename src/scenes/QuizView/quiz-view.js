@@ -11,7 +11,7 @@ import { colors } from '../Style/constants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 // Actions
-import { getQuizzesRequest, selectQuiz } from '../ducks/actions';
+import { getQuizzesRequest, selectQuiz, deleteQuestionRequest } from '../ducks/actions';
 
 const NavBar = styled.div`
   width: 100%;
@@ -125,7 +125,7 @@ const ActionButton = (props) => {
   }
   return (
     <QuizButton icon={props.icon}
-      color={colors.blue}
+      color={props.color}
       onClick={action}
       style={props.style}>
     </QuizButton>
@@ -153,6 +153,15 @@ class QuestionList extends Component {
     })
   }
 
+  deleteQuestion(question) {
+    const data = {
+      id: question.id,
+      quiz_id: question.quiz_id
+    }
+    this.props.deleteQuestionRequest(data);
+  }
+
+
   render() {
     console.log('this.props.location')
     console.log(this.props.location)
@@ -170,8 +179,16 @@ class QuestionList extends Component {
               <p style={{ color: colors.gray700 }}>{question.text}</p>
             </CenteredContainer>
             <CenteredContainer style={{ width: '100%' }}>
-              <ActionButton
+              <ActionButton icon="trash"
+                color={colors.red}
+                data={question}
+                action={this.deleteQuestion.bind(this)}
                 style={{ display: 'inline-block', marginLeft: 'auto' }}
+              >
+              </ActionButton>
+              <ActionButton
+                style={{ display: 'inline-block' }}
+                color={colors.blue}
                 icon="edit"
                 data={question}
                 action={this.editQuestion.bind(this)}
@@ -245,6 +262,8 @@ class QuizView extends Component {
     let selectedQuiz = null;
     if (this.props.selectedQuiz !== null) {
       return this.props.selectedQuiz
+    } else if (this.props.location.state) {
+      return this.props.location.state
     }
     const quiz_id = this.props.location.search.replace(/\?quiz_id=/, '')
     this.props.quizzes.forEach((quiz) => {
@@ -349,7 +368,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     getQuizzesRequest,
     selectQuiz,
-
+    deleteQuestionRequest,
   }, dispatch);
 }
 

@@ -285,22 +285,49 @@ router.put('/updatequestion', (req, res) => {
         }
     })
 })
+
+
+router.delete('/question', (req, res) => {
+    const { id } = req.query;
+    console.log('delete question');
+    console.log(id)
+    const deleteQuestionsQuery = 'DELETE from multiple_choice_questions WHERE id=' + id + ';'
+
+    pool.connect((err, client, done) => {
+        if (err) {
+            console.log('Error connecting to database', err)
+            res.sendStatus(500)
+        } else {
+            client.query(deleteQuestionsQuery, (err, result) => {
+                done();
+                if (err) {
+                    console.log('Error making delete questions query: ', err)
+                    res.sendStatus(500);
+                } else {
+                    console.log(result)
+                    res.send(result)
+                }
+            })
+        }
+    })
+})
+
 // For updating more than one row at once... https://stackoverflow.com/questions/1109061/insert-on-duplicate-update-in-postgresql
 // and
 // https://stackoverflow.com/questions/20255138/sql-update-multiple-records-in-one-query
 
 // UPDATE multiple_choice_questions SET text=($1), correct_answer=($2),... WHERE id=($n)
-function createUpdateMultipleChoiceQuery (row) {
+function createUpdateMultipleChoiceQuery(row) {
     const values = [];
     const columns = [];
     let i = 0
     for (key in row) {
         if (key != 'id') {
-            i ++
+            i++
             const expression = key + '=($' + i + ')'
             columns.push(expression)
             values.push(row[key])
-        } 
+        }
     }
     // push id last
     values.push(row.id);

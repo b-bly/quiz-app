@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 };
 
 // state is only assigned INITIAL_STATE if it is undefined when quizReducer is called
-function quizReducer(state = INITIAL_STATE, action) { 
+function quizReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case types.POST_NEW_QUIZ_REQUEST: {
       return {
@@ -118,7 +118,7 @@ function quizReducer(state = INITIAL_STATE, action) {
     }
     case types.GET_QUIZZES_SUCCESS: {
       return {
-        ...state, 
+        ...state,
         isLoading: false,
         quizzes: action.payload,
         error: null,
@@ -161,6 +161,41 @@ function quizReducer(state = INITIAL_STATE, action) {
         error: action.error
       }
     }
+    case types.DELETE_QUESTION_REQUEST: {
+      return {
+        ...state,
+      }
+    }
+    case types.DELETE_QUESTION_SUCCESS: {
+      return {
+        ...state,
+        quizzes: [
+          ...Object.assign([], state.quizzes).map((quiz, i) => {
+            if (action.payload.quiz_id === quiz.quiz_id) {
+              const updatedQuiz = { ...quiz }
+              const updatedQuestions = [...quiz.questions].filter((question) => {
+                if (question.id == action.payload.id) {
+                  return false
+                } else {
+                  return true
+                }
+              })
+              updatedQuiz.questions = updatedQuestions
+              return updatedQuiz
+            } else {
+              return quiz
+            }
+          })
+        ],
+      }
+    }
+
+    case types.DELETE_QUESTION_ERROR: {
+      return {
+        ...state,
+        error: action.error
+      }
+    }
     case types.UPDATE_QUIZ_REQUEST: {
       return {
         ...state,
@@ -182,7 +217,7 @@ function quizReducer(state = INITIAL_STATE, action) {
             if (action.payload.quiz_id === quiz.quiz_id) {
               const updatedQuiz = { ...quiz }
               updatedQuiz.name = action.payload.name || updatedQuiz.name || ''
-              updatedQuiz.type= action.payload.type || updatedQuiz.type || ''
+              updatedQuiz.type = action.payload.type || updatedQuiz.type || ''
               return updatedQuiz
             } else {
               return quiz

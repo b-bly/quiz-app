@@ -78,9 +78,8 @@ class AddQuestion extends Component {
 
   close() {
     this.props.resetQuestionForm();
-    const question = this.getQuestion()
-    const quiz = question.quiz
-    const quiz_id = question.quiz_id
+    const quiz = this.getQuiz()
+    const quiz_id = quiz.quiz_id
     this.setState({
       redirectTo: {
         pathname: '/view-quiz/?quiz_id=' + quiz_id,
