@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Route } from 'react-router-dom'
 // Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTrash, faPencilAlt, faStroopwafel, faEdit, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faPencilAlt, faStroopwafel, faEdit, faCheck, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 
 
 // style
@@ -13,8 +13,10 @@ import Home from './scenes/Home/home'
 import NewQuiz from './scenes/NewQuiz/new-quiz'
 import QuizView from './scenes/QuizView/quiz-view'
 import AddQuestion from './scenes/NewQuiz/add-question.js'
+import Start from './scenes/Start/start'
 
-library.add(faTrash, faPencilAlt, faStroopwafel, faEdit, faCheck)
+
+library.add(faTrash, faPencilAlt, faStroopwafel, faEdit, faCheck, faExternalLinkAlt)
 
 
 class App extends Component {
@@ -44,6 +46,10 @@ class App extends Component {
         <Route
           path="/edit-question"
           component={AddQuestion}
+        />
+        <Route
+          path="/start"
+          component={Start}
         />
       </div>
     );

@@ -139,6 +139,17 @@ class QuizListItem extends Component {
     })
   }
 
+  start(e) {
+    e.stopPropagation();
+    const redirectObject = {
+      pathname: '/start/?quiz_id=' + this.props.quiz_id,
+      state: this.props.quiz
+    }
+    this.setState({
+      redirectTo: redirectObject,
+    })
+  }
+
   render() {
     let numberOfQuestions = 0
     if (this.props.quiz.questions) {
@@ -168,6 +179,10 @@ class QuizListItem extends Component {
             <QuizButton icon="edit"
               color={colors.blue}
               onClick={this.editQuiz.bind(this)}>
+            </QuizButton>
+            <QuizButton icon="external-link-alt"
+              color={colors.green}
+              onClick={this.start.bind(this)}>
             </QuizButton>
           </RightContainer>
 
