@@ -131,7 +131,7 @@ class QuizListItem extends Component {
   editQuiz(e) {
     e.stopPropagation();
     const redirectObject = {
-      pathname: '/view-quiz/?quiz_id=' + this.props.quiz_id,
+      pathname: '/view-quiz/?quiz_id=' + this.props.quiz.quiz_id,
       state: this.props.quiz
     }
     this.setState({
@@ -142,7 +142,7 @@ class QuizListItem extends Component {
   start(e) {
     e.stopPropagation();
     const redirectObject = {
-      pathname: '/start/?quiz_id=' + this.props.quiz_id,
+      pathname: '/start/' + this.props.quiz.quiz_id,
       state: this.props.quiz
     }
     this.setState({

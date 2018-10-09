@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 // Components
+import Question from './question'
 
 //Style
 import styled from 'styled-components'
@@ -55,6 +56,7 @@ const CenteredColumn = styled.div`
 
 const QuestionContainer = styled.div`
   display: flex;
+  flex-direction: column;
   margin: 15px auto;
   width: 80%;
   box-shadow: 1px 1px 3px 1px darkgrey;
@@ -63,17 +65,6 @@ const QuestionContainer = styled.div`
   padding: 10px;
   line-height: 1.4em;
   border-radius: 1em;
-`
-
-const AddQuestionCard = styled.div`
-  display: flex;
-  margin: 15px auto;
-  width: 80%;
-  text-align: left;
-  padding: 10px;
-  line-height: 1.4em;
-  border-radius: 1em;
-  border: 5px dashed darkgray;
 `
 
 const Button = styled.button`
@@ -110,12 +101,6 @@ const Button = styled.button`
 }
 `
 
-const QuizButton = styled(FontAwesomeIcon)`
-  color: ${props => props.color};
-  margin: 'auto .5em';
-  margin: 0 .5em;
-  cursor: pointer;`
-
 const Row = styled.div`
   display: inline-block;`
 
@@ -124,9 +109,16 @@ class Start extends Component {
   constructor() {
     super()
     this.state = {
-      redirectTo: null
+      redirectTo: null,
+      questionIndex: 0
     }
   }
+  componentDidMount() {
+    // if (this.props.quizzes.length < 1) {
+      this.props.getQuizzesRequest();
+    // }
+  }
+
   redirectHome() {
     console.log('redirecting home');
     this.setState({
@@ -139,6 +131,20 @@ class Start extends Component {
   render() {
     console.log('this.props')
     console.log(this.props)
+    const quiz_id = this.props.match.params.id
+    let quiz = null
+    if (this.props.quizzes.length > 0) {
+      this.props.quizzes.forEach((quizObj) => {        
+        if (quizObj.quiz_id == quiz_id) {
+          console.log('found quiz');
+          
+          quiz = quizObj
+        }
+      })
+    }
+    console.log('quiz');
+    console.log(quiz)
+
 
     if (this.state.redirectTo) {
       return (
@@ -150,12 +156,25 @@ class Start extends Component {
           <NavBar>
             <NavBarLink
               onClick={this.redirectHome.bind(this)}
-            >Quizzes</NavBarLink>
+            >Quiz Home</NavBarLink>
             <div></div>
           </NavBar>
           <Row>
             <h1 style={{ display: 'inline-block' }}>Quiz Start</h1>
           </Row>
+            {quiz !== null && (
+              <QuestionContainer>
+                <span>{quiz.name}</span>
+                {quiz.questions.length > 0 ? (
+                   <Question 
+                   question={quiz.questions[this.state.questionIndex]}
+                   />
+                ) : (
+                  <p>This quiz has no questions.</p>
+                )}
+               
+              </QuestionContainer>
+            )}
         </Container>
 
       )

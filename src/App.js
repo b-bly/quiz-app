@@ -48,7 +48,7 @@ class App extends Component {
           component={AddQuestion}
         />
         <Route
-          path="/start"
+          path="/start/:id"
           component={Start}
         />
       </div>

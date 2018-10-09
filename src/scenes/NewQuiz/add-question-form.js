@@ -3,10 +3,10 @@ import { Redirect } from 'react-router-dom'
 
 // Redux form
 import { Field, reduxForm } from 'redux-form'
-import renderField from './render-field'
+import renderField from '../../forms/render-field'
 import renderTextArea from './renderTextArea'
-import renderMarkCorrectField from './render-mark-correct-field'
-import invisibleField from './invisible-field'
+import renderMarkCorrectField from '../../forms/render-mark-correct-field'
+import invisibleField from '../../forms/invisible-field'
 // Style
 import styled from 'styled-components'
 import { colors } from '../Style/constants'

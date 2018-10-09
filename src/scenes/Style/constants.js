@@ -2,6 +2,7 @@
 // Colors
 export const colors = {
   blue:    '#007bff', // primary
+  blue_50: 'rgba(0, 123, 255, .5)',
   indigo:  '#6610f2',
   purple:  '#6f42c1',
   pink:    '#e83e8c',
