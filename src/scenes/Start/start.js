@@ -159,12 +159,13 @@ class Start extends Component {
             >Quiz Home</NavBarLink>
             <div></div>
           </NavBar>
+          {quiz !== null && (
           <Row>
-            <h1 style={{ display: 'inline-block' }}>Quiz Start</h1>
+            <h1 style={{ display: 'inline-block' }}>{quiz.name}</h1>
           </Row>
+          )}
             {quiz !== null && (
               <QuestionContainer>
-                <span>{quiz.name}</span>
                 {quiz.questions.length > 0 ? (
                    <Question 
                    question={quiz.questions[this.state.questionIndex]}

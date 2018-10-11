@@ -16,6 +16,11 @@ const Answer = styled.div`
   flex: 1;
   padding: .2em .5em;
   border-radius: .2em;
+  cursor: pointer;
+  &:hover {
+    text-decoration: none;
+    opacity: .8;
+  }
 `
 
 const AnswerRow = styled.div `
