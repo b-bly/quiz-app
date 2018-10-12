@@ -17,6 +17,8 @@ const Answer = styled.div`
   padding: .2em .5em;
   border-radius: .2em;
   cursor: pointer;
+  width: calc(50% - 2em);
+  flex: 1 0 auto;
   &:hover {
     text-decoration: none;
     opacity: .8;
