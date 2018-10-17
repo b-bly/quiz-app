@@ -3,29 +3,18 @@ import React, { Component, Fragment } from 'react'
 // //REDUX
 // import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
-// // Components
 
-// //Style
+// Components
+import Answer from './answer'
+
+//Style
 import styled from 'styled-components'
 import { colors } from '../Style/constants'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-const Answer = styled.div`
-  background-color: ${props => props.color};
-  margin: .5em;
-  flex: 1;
-  padding: .2em .5em;
-  border-radius: .2em;
-  cursor: pointer;
-  width: calc(50% - 2em);
-  flex: 1 0 auto;
-  &:hover {
-    text-decoration: none;
-    opacity: .8;
-  }
-`
 
-const AnswerRow = styled.div `
+
+const AnswerRow = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
@@ -33,16 +22,16 @@ const AnswerRow = styled.div `
   width: 100%;
   `
 
-
 export default class Question extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      redirectTo: null
+      redirectTo: null,
+      selectedAnswer: null,
     }
   }
 
-  createAnswerChoices () {
+  createAnswerChoices() {
     const answerChoices = [];
     const alphabet = []
     for (let i = 0; i < 26; i++) {
@@ -62,20 +51,42 @@ export default class Question extends Component {
     return answerChoices
   }
 
-  render () {
+  submit = (letter) => {
+    console.log(letter)
+    this.setState({
+      selectedAnswer: letter
+    })
+  }
+
+  render() {
     const answerChoicesArray = this.createAnswerChoices()
     const answerChoices = answerChoicesArray.map((answerObj, i) => {
       const letter = Object.keys(answerObj)[0]
+      let color = colors.blue_50;
+      // if already answered
+      if (this.state.selectedAnswer !== null) {
+        // green for the correct answer
+        if (letter === this.props.question.correct_answer) {
+          color = colors.green_50;
+          // if it's not correct but it was selected, it's wrong
+        } else if (this.state.selectedAnswer == letter) {
+          color = colors.red_50;
+        }
+      }
+
       return (
-      <Answer key={i.toString()}
-        color={colors.blue_50}>
-        <span style={{opacity: '1'}}>{letter}.</span>
-        &nbsp;
-        <span>{answerObj[letter]}</span>
-      </Answer>
+
+        <Answer key={i.toString()}
+          text={answerObj[letter]}
+          letter={letter}
+          submit={this.submit.bind(this)}
+          correct_answer={this.props.correct_answer}
+          color={color}
+          selectedAnswer={this.state.selectedAnswer}
+        />
       )
     })
-    
+
     console.log('question')
     console.log(this.props)
     return (
@@ -87,7 +98,7 @@ export default class Question extends Component {
         </AnswerRow>
       </Fragment>
     )
-    
+
   }
 }
 

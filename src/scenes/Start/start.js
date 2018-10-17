@@ -78,18 +78,17 @@ const Button = styled.button`
   -ms-user-select: none;
   user-select: none;
   border: 1px solid transparent;
-  padding: 0;
-  font-size: 2rem;
-  line-height: 1.5;
-  border-radius: 0.25rem;
+  padding: 5px 20px;
+  font-size: 1em;
+  // line-height: 1.5;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   background-color: ${props => props.color};
   color: white;
-  border-radius: 50%;
+  border-radius: 1em;
   outline:0;
   text-decoration: none;
-  width: 50px;
   cursor: pointer;
+  
 
 &:hover, .btn:focus {
   text-decoration: none;
@@ -102,8 +101,24 @@ const Button = styled.button`
 `
 
 const Row = styled.div`
-  display: inline-block;`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 80%;
+  margin: auto;
+  `
 
+const CenteredItem = styled.div`
+  
+  `
+const NextContainer = styled.div`
+  position: relative;
+`
+
+const NextButton = styled(Button)`
+  position: absolute;
+  bottom:0;
+`
 
 class Start extends Component {
   constructor() {
@@ -115,7 +130,7 @@ class Start extends Component {
   }
   componentDidMount() {
     // if (this.props.quizzes.length < 1) {
-      this.props.getQuizzesRequest();
+    this.props.getQuizzesRequest();
     // }
   }
 
@@ -134,10 +149,10 @@ class Start extends Component {
     const quiz_id = this.props.match.params.id
     let quiz = null
     if (this.props.quizzes.length > 0) {
-      this.props.quizzes.forEach((quizObj) => {        
+      this.props.quizzes.forEach((quizObj) => {
         if (quizObj.quiz_id == quiz_id) {
           console.log('found quiz');
-          
+
           quiz = quizObj
         }
       })
@@ -160,22 +175,26 @@ class Start extends Component {
             <div></div>
           </NavBar>
           {quiz !== null && (
-          <Row>
-            <h1 style={{ display: 'inline-block' }}>{quiz.name}</h1>
-          </Row>
+            <Row>
+              <div></div>
+              <CenteredItem><h1 style={{ display: 'inline-block' }}>{quiz.name}</h1></CenteredItem>
+              <NextContainer><NextButton
+  color={colors.green}
+              >Next</NextButton></NextContainer>
+            </Row>
           )}
-            {quiz !== null && (
-              <QuestionContainer>
-                {quiz.questions.length > 0 ? (
-                   <Question 
-                   question={quiz.questions[this.state.questionIndex]}
-                   />
-                ) : (
+          {quiz !== null && (
+            <QuestionContainer>
+              {quiz.questions.length > 0 ? (
+                <Question
+                  question={quiz.questions[this.state.questionIndex]}
+                />
+              ) : (
                   <p>This quiz has no questions.</p>
                 )}
-               
-              </QuestionContainer>
-            )}
+
+            </QuestionContainer>
+          )}
         </Container>
 
       )

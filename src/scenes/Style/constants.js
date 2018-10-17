@@ -7,9 +7,11 @@ export const colors = {
   purple:  '#6f42c1',
   pink:    '#e83e8c',
   red:     '#dc3545', // danger
+  red_50:  'rgba(	220,	53,	69, .5)',
   orange:  '#fd7e14',
   yellow:  '#ffc107', // warning
   green:   '#28a745', // success
+  green_50: 'rgba(40,	167,	69, .5)',
   teal:    '#20c997',
   cyan:    '#17a2b8', // info
   white:    '#fff',
