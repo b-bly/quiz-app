@@ -103,7 +103,7 @@ const Button = styled.button`
 const Row = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 80%;
   margin: auto;
   `
@@ -118,6 +118,7 @@ const NextContainer = styled.div`
 const NextButton = styled(Button)`
   position: absolute;
   bottom:0;
+  right:0;
 `
 
 class Start extends Component {
@@ -125,7 +126,9 @@ class Start extends Component {
     super()
     this.state = {
       redirectTo: null,
-      questionIndex: 0
+      questionIndex: 0,
+      quiz: null,
+      done: false,
     }
   }
   componentDidMount() {
@@ -134,22 +137,11 @@ class Start extends Component {
     // }
   }
 
-  redirectHome() {
-    console.log('redirecting home');
-    this.setState({
-      redirectTo: { pathname: '/' }
-    }, function () {
-      // this.props.selectQuiz({})
-    })
-  }
-
-  render() {
-    console.log('this.props')
-    console.log(this.props)
-    const quiz_id = this.props.match.params.id
+  componentWillReceiveProps(nextProps) {
+    const quiz_id = nextProps.match.params.id
     let quiz = null
-    if (this.props.quizzes.length > 0) {
-      this.props.quizzes.forEach((quizObj) => {
+    if (nextProps.quizzes.length > 0) {
+      nextProps.quizzes.forEach((quizObj) => {
         if (quizObj.quiz_id == quiz_id) {
           console.log('found quiz');
 
@@ -157,6 +149,62 @@ class Start extends Component {
         }
       })
     }
+    this.setState({
+      quiz: quiz
+    })
+  }
+
+
+  redirectHome() {
+    console.log('redirecting home');
+
+    this.setState({
+      redirectTo: { pathname: '/' }
+    }, function () {
+      // this.props.selectQuiz({})
+    })
+  }
+
+  nextQuestion = () => {
+    console.log('next question')
+    const questionIndex = parseInt(this.state.questionIndex) + 1
+    if (questionIndex <= (this.state.quiz.questions.length - 1)) {
+      this.setState({
+        questionIndex: questionIndex,
+      }, function () {
+        console.log('this.state')
+        console.log(this.state.questionIndex)
+      })
+    } else {
+      this.setState({
+        done: true,
+      })
+    }
+  }
+
+  endQuiz = () => {
+    // if last question, show done screen
+    this.setState({
+      done: true
+    })
+    console.log('quiz done')
+  }
+
+  render() {
+    console.log('this.props')
+    console.log(this.props)
+    const quiz_id = this.props.match.params.id
+    let quiz = this.state.quiz
+    // if (this.props.quizzes.length > 0) {
+    //   this.props.quizzes.forEach((quizObj) => {
+    //     if (quizObj.quiz_id == quiz_id) {
+    //       console.log('found quiz');
+
+    //       quiz = quizObj
+    //     }
+    //   })
+    // }
+
     console.log('quiz');
     console.log(quiz)
 
@@ -164,6 +212,10 @@ class Start extends Component {
     if (this.state.redirectTo) {
       return (
         <Redirect to={this.state.redirectTo} />
+      )
+    } else if (this.state.done) {
+      return (
+        <div>All done!</div>
       )
     } else {
       return (
@@ -179,7 +231,8 @@ class Start extends Component {
               <div></div>
               <CenteredItem><h1 style={{ display: 'inline-block' }}>{quiz.name}</h1></CenteredItem>
               <NextContainer><NextButton
-  color={colors.green}
+                color={colors.green}
+                onClick={this.nextQuestion.bind(this)}
               >Next</NextButton></NextContainer>
             </Row>
           )}
@@ -188,6 +241,9 @@ class Start extends Component {
               {quiz.questions.length > 0 ? (
                 <Question
                   question={quiz.questions[this.state.questionIndex]}
+                  endQuiz={this.endQuiz.bind(this)}
+                  questionIndex={this.state.questionIndex}
+                  numberOfQuestions={quiz.questions.length}
                 />
               ) : (
                   <p>This quiz has no questions.</p>

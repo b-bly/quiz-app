@@ -39,13 +39,15 @@ export default class Question extends Component {
       const letter = (String.fromCharCode(i + 97))
       alphabet.push(letter);
     }
-    for (let letter of alphabet) {
-      if (this.props.question[letter] != undefined) {
-        const answer = {}
-        answer[letter] = this.props.question[letter]
-        answerChoices.push(answer)
-      } else {
-        return answerChoices
+    if (this.props.question) {
+      for (let letter of alphabet) {
+        if (this.props.question[letter] != undefined) {
+          const answer = {}
+          answer[letter] = this.props.question[letter]
+          answerChoices.push(answer)
+        } else {
+          return answerChoices
+        }
       }
     }
     return answerChoices
@@ -56,9 +58,12 @@ export default class Question extends Component {
     this.setState({
       selectedAnswer: letter
     })
+
   }
 
   render() {
+    console.log('Question props');
+    console.log(this.props)
     const answerChoicesArray = this.createAnswerChoices()
     const answerChoices = answerChoicesArray.map((answerObj, i) => {
       const letter = Object.keys(answerObj)[0]
@@ -73,9 +78,7 @@ export default class Question extends Component {
           color = colors.red_50;
         }
       }
-
       return (
-
         <Answer key={i.toString()}
           text={answerObj[letter]}
           letter={letter}
@@ -83,21 +86,26 @@ export default class Question extends Component {
           correct_answer={this.props.correct_answer}
           color={color}
           selectedAnswer={this.state.selectedAnswer}
+          
         />
       )
     })
 
     console.log('question')
     console.log(this.props)
-    return (
-      <Fragment>
-        {/* <h1>{this.props.question.text}</h1> */}
-        <h1>{this.props.question.text}</h1>
-        <AnswerRow>
-          {answerChoices}
-        </AnswerRow>
-      </Fragment>
-    )
+    if (this.props.question) {
+      return (
+        <Fragment>
+          {/* <h1>{this.props.question.text}</h1> */}
+          <h1>{this.props.question.text}</h1>
+          <AnswerRow>
+            {answerChoices}
+          </AnswerRow>
+        </Fragment>
+      )
+    } else {
+      return null
+    }
 
   }
 }
