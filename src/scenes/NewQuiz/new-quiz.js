@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 // Components
 import NewQuizForm from './new-quiz-form';
+import NavBar from './nav-bar'
 //Style
 // import './new-quiz.css'
 import styled from 'styled-components'
@@ -43,20 +44,6 @@ const CloseX = styled.div`
     opacity: .8;
     background-color:rgba(0, 0, 0, .6);
   }`
-
-const NavBar = (props) => {
-  const redirectQuizView = () => {
-    props.redirectQuizView(props.quiz)
-  }
-  return (
-    <NavBarContainer>
-      <NavBarItem></NavBarItem>
-      <NavBarItem>New Question</NavBarItem>
-      <CloseX onClick={redirectQuizView}
-      >&#x2716;</CloseX>
-    </NavBarContainer>
-  )
-}
 
 const NewQuizFormWrapper = (props) => {
   const submitEdit = () => {
@@ -111,18 +98,31 @@ class NewQuiz extends Component {
     })
   }
 
-  redirectQuizView = (quiz) => {
-    this.setState({
-      redirectTo: {
-        pathname: '/view-quiz/?quiz_id=' + quiz.quiz_id,
-        state: quiz
-      }
-    })
+  close = (quiz) => {
+    const editMode = this.props.match.path === '/edit-quiz'
+    if (editMode === true) {
+      this.setState({
+        redirectTo: {
+          pathname: '/view-quiz/?quiz_id=' + quiz.quiz_id,
+          state: quiz,
+        }
+      })
+    } else {
+      this.setState({
+        redirectTo: {
+          pathname: '/',
+        }
+      })
+    }
+    
   }
 
 
   render() {
     const quiz = this.getQuiz()
+    console.log('props')
+    console.log(this.props);
+    
     // https://redux-form.com/7.0.2/examples/initializefromstate/
     console.log('quiz', quiz)
     // let initialValue = null;
@@ -140,9 +140,9 @@ class NewQuiz extends Component {
       return (
         <Container>
           <NavBar
-            redirectQuizView={this.redirectQuizView.bind(this)}
-            quiz={quiz}>
-          </NavBar>
+            close={this.close.bind(this)}
+            quiz={quiz}
+          />
           <h4>New Quiz</h4>
           {this.props.quiz.error !== null &&
             <p>There was an error submitting your quiz.  Please try again.</p>
