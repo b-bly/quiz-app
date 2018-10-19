@@ -129,6 +129,8 @@ class Start extends Component {
       questionIndex: 0,
       quiz: null,
       done: false,
+      score: 0,
+      selectedAnswer: null,
     }
   }
   componentDidMount() {
@@ -171,9 +173,7 @@ class Start extends Component {
     if (questionIndex <= (this.state.quiz.questions.length - 1)) {
       this.setState({
         questionIndex: questionIndex,
-      }, function () {
-        console.log('this.state')
-        console.log(this.state.questionIndex)
+        selectedAnswer: null,
       })
     } else {
       this.setState({
@@ -188,6 +188,15 @@ class Start extends Component {
       done: true
     })
     console.log('quiz done')
+  }
+
+  submit = (letter, correct) => {
+    let score = this.state.score
+    if (correct) score += 1
+    this.setState({
+      score: score,
+      selectedAnswer: letter,
+    })
   }
 
   render() {
@@ -213,10 +222,6 @@ class Start extends Component {
       return (
         <Redirect to={this.state.redirectTo} />
       )
-    } else if (this.state.done) {
-      return (
-        <div>All done!</div>
-      )
     } else {
       return (
         <Container>
@@ -226,7 +231,14 @@ class Start extends Component {
             >Quiz Home</NavBarLink>
             <div></div>
           </NavBar>
-          {quiz !== null && (
+          {this.state.done === true && (
+            <div>
+              <div>All done</div>
+              <div>Score: {this.state.score}/{quiz.questions.length}</div>
+            </div>
+          )}
+
+          {quiz !== null && this.state.done === false && (
             <Row>
               <div></div>
               <CenteredItem><h1 style={{ display: 'inline-block' }}>{quiz.name}</h1></CenteredItem>
@@ -236,7 +248,7 @@ class Start extends Component {
               >Next</NextButton></NextContainer>
             </Row>
           )}
-          {quiz !== null && (
+          {quiz !== null && this.state.done === false && (
             <QuestionContainer>
               {quiz.questions.length > 0 ? (
                 <Question
@@ -244,6 +256,8 @@ class Start extends Component {
                   endQuiz={this.endQuiz.bind(this)}
                   questionIndex={this.state.questionIndex}
                   numberOfQuestions={quiz.questions.length}
+                  submit={this.submit.bind(this)}
+                  selectedAnswer={this.state.selectedAnswer}
                 />
               ) : (
                   <p>This quiz has no questions.</p>
@@ -251,6 +265,10 @@ class Start extends Component {
 
             </QuestionContainer>
           )}
+
+
+
+
         </Container>
 
       )

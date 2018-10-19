@@ -27,7 +27,6 @@ export default class Question extends Component {
     super(props)
     this.state = {
       redirectTo: null,
-      selectedAnswer: null,
     }
   }
 
@@ -55,10 +54,13 @@ export default class Question extends Component {
 
   submit = (letter) => {
     console.log(letter)
-    this.setState({
-      selectedAnswer: letter
-    })
-
+    // submit only if not yet answered -- no changing
+    if (this.props.selectedAnswer === null) {
+      // update score
+      const correct = (letter === this.props.question.correct_answer)
+      this.props.submit(letter, correct)
+    }
+    // in next function in start, reset selected answer of question.js
   }
 
   render() {
@@ -69,12 +71,12 @@ export default class Question extends Component {
       const letter = Object.keys(answerObj)[0]
       let color = colors.blue_50;
       // if already answered
-      if (this.state.selectedAnswer !== null) {
+      if (this.props.selectedAnswer !== null) {
         // green for the correct answer
         if (letter === this.props.question.correct_answer) {
           color = colors.green_50;
           // if it's not correct but it was selected, it's wrong
-        } else if (this.state.selectedAnswer == letter) {
+        } else if (this.props.selectedAnswer == letter) {
           color = colors.red_50;
         }
       }
@@ -85,8 +87,8 @@ export default class Question extends Component {
           submit={this.submit.bind(this)}
           correct_answer={this.props.correct_answer}
           color={color}
-          selectedAnswer={this.state.selectedAnswer}
-          
+          selectedAnswer={this.props.selectedAnswer}
+
         />
       )
     })
