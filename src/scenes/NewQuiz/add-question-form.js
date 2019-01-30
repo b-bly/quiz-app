@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
+// components
+import RoundButton from '../../Components/RoundButton'
 
 // Redux form
 import { Field, reduxForm } from 'redux-form'
@@ -9,7 +11,7 @@ import renderMarkCorrectField from '../../forms/render-mark-correct-field'
 import invisibleField from '../../forms/invisible-field'
 // Style
 import styled from 'styled-components'
-import { colors } from '../Style/constants'
+import { colors } from '../../Style/constants'
 
 const validate = values => {
   const errors = {}
@@ -154,6 +156,8 @@ const SubmitButton = styled.input`
 const ButtonContainer = styled.div`
   width: 100%;
   text-align:right;
+  display: flex;
+  justify-content: flex-end;
 `
 
 const MultipleChoiceAnswer = (props) => {
@@ -187,11 +191,12 @@ const MultipleChoiceAnswer = (props) => {
           />
         </FormContainer>
         {props.removeButton &&
-          <Button
-            color="orange"
-            type="button"
-            onClick={props.removeAnswer}
-          >-</Button>
+          <RoundButton
+            text="-"
+            action={props.removeAnswer}
+            color={colors.orange}
+            ariaLabel="remove answer blank"
+          />
         }
       </FormGroup>
     </Row>
@@ -319,11 +324,12 @@ class AddQuestionForm extends Component {
           )}
 
           <ButtonContainer>
-            <Button
-              type="button"
-              onClick={this.addAnswerBlank.bind(this)}
+            <RoundButton
+              text="+"
+              action={this.addAnswerBlank.bind(this)}
               color={colors.blue}
-            >+</Button>
+              ariaLabel="add answer blank"
+            />
           </ButtonContainer>
         </QuestionContainer>
         <FormGroup>

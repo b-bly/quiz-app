@@ -6,7 +6,7 @@ import renderField from '../../forms/render-field'
 // import renderMarkCorrectField from '../../forms/render-mark-correct-field'
 // Style
 import styled from 'styled-components'
-import { colors } from '../Style/constants';
+import { colors } from '../../Style/constants';
 // import { colors } from '../Style/constants'
 
 

@@ -7,7 +7,7 @@ import React, { Component, Fragment } from 'react'
 
 // //Style
 import styled from 'styled-components'
-import { colors } from '../Style/constants'
+import { colors } from '../../Style/constants'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const AnswerDiv = styled.div`

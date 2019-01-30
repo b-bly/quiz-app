@@ -4,10 +4,11 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 // Components
+import RoundButton from '../../Components/RoundButton'
 
 //Style
 import styled from 'styled-components'
-import { colors } from '../Style/constants'
+import { colors } from '../../Style/constants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 // Actions
@@ -76,8 +77,19 @@ const AddQuestionCard = styled.div`
   border: 5px dashed darkgray;
 `
 
-const Button = styled.button`
-  display: inline-block;
+const Button = styled.div`
+  
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  margin-bottom: 10px;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+
+  background-color: ${props => props.color};
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
@@ -87,17 +99,12 @@ const Button = styled.button`
   -ms-user-select: none;
   user-select: none;
   border: 1px solid transparent;
-  padding: 0;
-  font-size: 2rem;
-  line-height: 1.5;
-  border-radius: 0.25rem;
+
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  background-color: ${props => props.color};
+  background-color: rgb(23, 112, 255);
   color: white;
-  border-radius: 50%;
   outline:0;
   text-decoration: none;
-  width: 50px;
   cursor: pointer;
 
 &:hover, .btn:focus {
@@ -108,6 +115,14 @@ const Button = styled.button`
 &:focus, .btn.focus {
   outline: 0;
 }
+`
+
+const ButtonLabel = styled.div `
+  height: 100%;
+  width: 100%;
+  font-size: 50px;
+  padding-top: 4px;
+  line-height: unset!important;
 `
 
 const QuizButton = styled(FontAwesomeIcon)`
@@ -333,15 +348,12 @@ class QuizView extends Component {
           <AddQuestionCard>
             <CenteredColumn>
               <p style={{ color: colors.gray700, margin: '10px 0' }}>Add a question</p>
-              <Button style={{ marginBottom: '10px' }}
-                aria-label="Add a question"
+              <RoundButton 
+                text="+"
+                ariaLabel="Add a question"
                 color={colors.blue}
-                onClick={this.showAddNewQuestionForm.bind(this)}
-              >+
-              {/* <small style={{fontSize: '25px', fontSize: '25px', height: '15px', marginTop: '-20px'}}>
-                +
-              </small> */}
-              </Button>
+                action={this.showAddNewQuestionForm.bind(this)}
+              />
             </CenteredColumn>
           </AddQuestionCard>
           {this.props.isLoading === false && (

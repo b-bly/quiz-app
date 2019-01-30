@@ -3,7 +3,7 @@ import { Link, Redirect } from 'react-router-dom'
 // Style
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components'
-import { colors } from '../Style/constants'
+import { colors } from '../../Style/constants'
 
 //REDUX
 import { connect } from 'react-redux';
