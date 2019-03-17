@@ -4,237 +4,20 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 // Components
-import RoundButton from '../../Components/RoundButton'
+import RoundButton from '../../Components/round-button'
+import QuestionList from './question-list'
+import { ActionButton } from '../../Components/action-button'
 
 //Style
-import styled from 'styled-components'
 import { colors } from '../../Style/constants'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  NavBar, NavBarLink, Container, CenteredColumn, AddQuestionCard, Row
+} from './quiz-view-style'
 
 // Actions
-import { getQuizzesRequest, selectQuiz, deleteQuestionRequest } from '../ducks/actions';
-
-const NavBar = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  // height: 20px;
-  flex-direction: row;
-  background-color: rgba(0, 0, 0, .7);
-  `
-const NavBarLink = styled.div`
-  color: white;
-  padding: 10px;
-  cursor: pointer;
-  &:hover {
-    opacity: .8;
-    background-color:rgba(0, 0, 0, .6);
-  }`
-
-const Container = styled.div`
-  background-color: rgb(236, 236, 236);
-  width: 100%;
-  height: 100vh;
-  display: inline-block;`
-
-const CenteredContainer = styled.div`
-  margin: auto 1em;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  `
-const CenteredColumn = styled.div`
-  margin: auto;
-  height: 100%;
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  justify-content: space-around;
-  `
-
-const QuestionContainer = styled.div`
-  display: flex;
-  margin: 15px auto;
-  width: 80%;
-  box-shadow: 1px 1px 3px 1px darkgrey;
-  background-color: white;
-  text-align: left;
-  padding: 10px;
-  line-height: 1.4em;
-  border-radius: 1em;
-`
-
-const AddQuestionCard = styled.div`
-  display: flex;
-  margin: 15px auto;
-  width: 80%;
-  text-align: left;
-  padding: 10px;
-  line-height: 1.4em;
-  border-radius: 1em;
-  border: 5px dashed darkgray;
-`
-
-const Button = styled.div`
-  
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  margin-bottom: 10px;
-
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: center;
-
-  background-color: ${props => props.color};
-  font-weight: 400;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  border: 1px solid transparent;
-
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  background-color: rgb(23, 112, 255);
-  color: white;
-  outline:0;
-  text-decoration: none;
-  cursor: pointer;
-
-&:hover, .btn:focus {
-  text-decoration: none;
-  opacity: .8;
-}
-
-&:focus, .btn.focus {
-  outline: 0;
-}
-`
-
-const ButtonLabel = styled.div `
-  height: 100%;
-  width: 100%;
-  font-size: 50px;
-  padding-top: 4px;
-  line-height: unset!important;
-`
-
-const QuizButton = styled(FontAwesomeIcon)`
-  color: ${props => props.color};
-  margin: 'auto .5em';
-  margin: 0 .5em;
-  cursor: pointer;`
-
-const Row = styled.div`
-  display: inline-block;`
-
-const ActionButton = (props) => {
-  const action = () => {
-    props.action(props.data);
-  }
-  return (
-    <QuizButton icon={props.icon}
-      color={props.color}
-      onClick={action}
-      style={props.style}>
-    </QuizButton>
-  )
-}
-
-class QuestionList extends Component {
-  constructor() {
-    super()
-    this.state = {
-      redirectTo: null
-    }
-  }
-
-  editQuestion(question) {
-    const redirectObj = {
-      pathname: '/edit-question/?quiz_id=' + this.props.selectedQuiz.quiz_id,
-      state: {
-        question: question,
-        quiz: this.props.selectedQuiz
-      }
-    }
-    this.setState({
-      redirectTo: redirectObj
-    })
-  }
-
-  deleteQuestion(question) {
-    const data = {
-      id: question.id,
-      quiz_id: question.quiz_id
-    }
-    this.props.deleteQuestionRequest(data);
-  }
-
-
-  render() {
-    console.log('this.props.location')
-    console.log(this.props.location)
-    console.log('quiz.questions')
-    console.log(this.props.selectedQuiz.questions)
-    let questions = null
-    if (this.props.selectedQuiz) {
-      if (this.props.selectedQuiz.questions) {
-        questions = this.props.selectedQuiz.questions.length < 1 ? null : this.props.selectedQuiz.questions.map((question, i) =>
-          <QuestionContainer key={i.toString()}>
-            <CenteredContainer>
-              <h1 style={{ color: colors.gray700 }}>{i + 1}</h1>
-            </CenteredContainer>
-            <CenteredContainer>
-              <p style={{ color: colors.gray700 }}>{question.text}</p>
-            </CenteredContainer>
-            <CenteredContainer style={{ width: '100%' }}>
-              <ActionButton icon="trash"
-                color={colors.red}
-                data={question}
-                action={this.deleteQuestion.bind(this)}
-                style={{ display: 'inline-block', marginLeft: 'auto' }}
-              >
-              </ActionButton>
-              <ActionButton
-                style={{ display: 'inline-block' }}
-                color={colors.blue}
-                icon="edit"
-                data={question}
-                action={this.editQuestion.bind(this)}
-              >
-              </ActionButton>
-            </CenteredContainer>
-          </QuestionContainer>
-        )
-      }
-    }
-    console.log('questions:');
-    console.log(questions);
-    if (this.state.redirectTo) {
-      return (
-        <Redirect to={this.state.redirectTo} />
-      )
-    } else {
-      return (
-        <Fragment>
-          {questions ?
-            <Fragment>
-              {questions}
-            </Fragment>
-            :
-            <div>This quiz has no questions</div>
-          }
-        </Fragment>
-      )
-    }
-  }
-}
+import {
+  getQuizzesRequest, selectQuiz, deleteQuestionRequest
+} from '../ducks/actions'
 
 class QuizView extends Component {
   constructor(props) {
@@ -338,6 +121,7 @@ class QuizView extends Component {
             <h1 style={{ display: 'inline-block' }}>{quiz.name}</h1>
 
             <ActionButton
+              color={colors.blue}
               icon="edit"
               data={quiz}
               action={this.editQuiz.bind(this)}
@@ -348,7 +132,7 @@ class QuizView extends Component {
           <AddQuestionCard>
             <CenteredColumn>
               <p style={{ color: colors.gray700, margin: '10px 0' }}>Add a question</p>
-              <RoundButton 
+              <RoundButton
                 text="+"
                 ariaLabel="Add a question"
                 color={colors.blue}

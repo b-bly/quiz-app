@@ -6,8 +6,8 @@ import { colors } from '../Style/constants'
 const Button = styled.div`
   
 border-radius: 50%;
-width: 25px;
-height: 25px;
+width: 26px;
+height: 26px;
 
 display: flex;
 flex-flow: row nowrap;

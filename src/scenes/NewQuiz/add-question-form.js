@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 // components
-import RoundButton from '../../Components/RoundButton'
+import RoundButton from '../../Components/round-button'
 
 // Redux form
 import { Field, reduxForm } from 'redux-form'
