@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 // Components
 import AddQuestionForm from './add-question-form';
+import NavBar from '../../Components/nav-bar'
+
 //Style
 import styled from 'styled-components'
 
@@ -24,27 +26,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `
-const NavBar = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  // height: 20px;
-  flex-direction: row;
-  background-color: rgba(0, 0, 0, .7);
-  `
-const NavBarItem = styled.div`
-  color: white;
-  padding: 10px;`
-
-const CloseX = styled.div`
-  color: white;
-  padding: 10px;
-  cursor: pointer;
-  &:hover {
-    opacity: .8;
-    background-color:rgba(0, 0, 0, .6);
-  }`
 
 class AddQuestion extends Component {
   constructor() {
@@ -137,12 +118,11 @@ class AddQuestion extends Component {
     } else {
       return (
         <Background>
-          <NavBar>
-            <NavBarItem></NavBarItem>
-            <NavBarItem>New Question</NavBarItem>
-            <CloseX onClick={this.close.bind(this)}
-            >&#x2716;</CloseX>
-          </NavBar>
+          <NavBar
+            left=''
+            title='New Question'
+            close={this.close.bind(this)}
+          />
           <Container>
             {this.props.quiz.error !== null &&
               <p>There was an error submitting your quiz.  Please try again.</p>

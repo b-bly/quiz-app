@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 // Components
 import NewQuizForm from './new-quiz-form';
-import NavBar from './nav-bar'
+import NavBar from '../../Components/nav-bar'
 //Style
 // import './new-quiz.css'
 import styled from 'styled-components'
@@ -141,7 +141,7 @@ class NewQuiz extends Component {
         <Container>
           <NavBar
             close={this.close.bind(this)}
-            quiz={quiz}
+            data={quiz}
           />
           <h4>New Quiz</h4>
           {this.props.quiz.error !== null &&
